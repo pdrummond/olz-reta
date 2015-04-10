@@ -1,0 +1,40 @@
+{
+	"name": "OLZ-ORIC",
+	"version": "0.0.1",
+	"description": "OpenLoopz Client App",
+	"main": "main.js",
+	"dependencies": {
+		"bootstrap": "~3.3.4",
+		"backbone": "~1.1.2",
+		"jquery": "~2.1.3",
+		"underscore": "~1.8.3"	
+	},
+
+	"devDependencies": {
+		"browserify": "latest",
+		"browserify-shim": "latest"
+	},
+
+	"author": "Paul Drummond",
+	"license": "MIT",
+	
+	"browser": {	
+		"sockjs": "./lib/sockjs/sockjs.js",
+		"stomp": "./lib/stomp-websocket/lib/stomp.js"
+	},
+
+	"browserify-shim": {
+		"sockjs": "SockJS",
+		"stomp":  "Stomp"
+	},
+
+	"browserify": {
+		"transform": [ "browserify-shim" ]
+	},
+
+	"scripts": {
+		"build-js": "browserify --debug main.js -o bundle.js",
+		"watch-js": "watchify --debug main.js -o bundle.js",
+		"build-prod-js": "browserify main.js | uglifyjs -o bundle.js"
+	}
+}
