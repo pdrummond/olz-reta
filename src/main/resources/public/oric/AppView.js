@@ -6,9 +6,12 @@ var Backbone = require('backbone');
 var SockJS = require('sockjs');
 var Stomp = require('stomp');
 
+var LoopListWrapper = require('./LoopListWrapper');
+
 module.exports = Backbone.View.extend({
 		
 	initialize: function() {
+		this.loopListWrapper = new LoopListWrapper();
 		this.webSocketConnect(function() {
 			console.log("BOOM - it works!");
 		});
@@ -16,7 +19,8 @@ module.exports = Backbone.View.extend({
 	
 	render: function() {
 		var html = _.template($('#AppViewTemplate').html())();		
-		$('body').html(html);		
+		$('body').html(html);
+		$("#loop-list-wrapper").html(this.loopListWrapper.render());
 	},
 	
 	webSocketConnect: function(callback) {

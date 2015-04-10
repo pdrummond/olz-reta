@@ -10,8 +10,13 @@ module.exports = Backbone.View.extend({
 		
 	},
 	
-	el: $('body'),
-
 	initialize: function() {
+	},
+	
+	render: function() {
+		if(this.template == null) {
+			this.template = _.template($('#LoopListViewTemplate').html());
+		}
+		this.$el.html(this.template());
 	}
 });
