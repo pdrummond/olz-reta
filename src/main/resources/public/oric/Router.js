@@ -16,7 +16,6 @@ module.exports = Backbone.Router.extend({
 	},
 	
 	showHomeView: function() {
-		var AppView = require('./AppView');
 	    this.appView = window.appView = new AppView();
 	    this.appView.render();
 	}

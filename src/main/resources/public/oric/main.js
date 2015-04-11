@@ -4,8 +4,6 @@ var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
 
-var Router = require('./Router.js');
-
 window.csrfToken = null;
 
 // {{ var }} and {{! escaped var }}  
@@ -32,6 +30,7 @@ $.ajaxSetup({
 });
 
 $(function() {
+	var Router = require('./Router.js');
 	this.router = new Router();
 	Backbone.history.start({
 		pushState: true,
