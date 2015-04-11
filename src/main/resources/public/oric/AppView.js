@@ -44,14 +44,20 @@ module.exports = Backbone.View.extend({
 	},
 	
 	onNewLoopMessage: function(message) {
-		this.sendMessage("new_loop", message)
+		this.sendMessage("new_loop", message);		
 	},
 	
 	sendMessage: function(messageName, messageContent) {        
         this.stompClient.send("/app/" + messageName, {}, JSON.stringify(messageContent));
     },
     
-    dispatchMessage: function(message) {
+    dispatchMessage: function(message) {    	
     	console.log("MESSAGE: " + JSON.stringify(message));
+    	this.loopListWidget.addLoopItem(message);
+    	this.scrollBottom();
+    },
+    
+    scrollBottom: function() {
+    	window.scrollTo(0,document.body.scrollHeight);
     }
 });

@@ -7,15 +7,19 @@ var Backbone = require('backbone');
 var OlzView = require("./OlzView");
 
 module.exports = OlzView.extend({
+	
 	id:"LoopItemView",
-	events: {
+	
+	tagName:"li",
+	
+	template: _.template($('#LoopItemViewTemplate').html()),
+	
+	initialize: function(options) {
+		this.message = options.message;
+	},
 		
-	},
-	
-	initialize: function() {
-	},
-	
 	render: function() {		
-		this.$el.html(this.getTemplate("#LoopItemViewTemplate"));
+		this.$el.html(this.template(this.message));
+		return this.el;
 	}
 });

@@ -1,0 +1,25 @@
+body {
+	background: #F4F4F4 !important;
+}
+
+#app-container {
+	padding-top: 80px;
+	padding-bottom: 50px;
+}
+
+#new-loop-input {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;  
+  padding: 10px;
+}
+
+#loop-list li {
+	list-style-type: none;
+	padding:2px;
+}
+
+#loop-list-welcome-banner {
+	margin-top:300px;
+}

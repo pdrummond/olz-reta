@@ -36,5 +36,9 @@ module.exports = OlzView.extend({
 	onInputViewEnterPressed: function(content) {
 		var message = {content: content};
 		this.trigger('new-loop-message', message);
+	},
+	
+	addLoopItem: function(message) {
+		this.loopListView.addLoopItem(message);
 	}
 });

@@ -17,10 +17,10 @@ module.exports = OlzView.extend({
 	
 	events: {
 		"keyup #new-loop-input": "onInput",
-		'click #boom': 'boom',
 	},
 		
-	initialize: function() {	
+	initialize: function() {
+		
 	},
 	
 	render: function() {
@@ -28,14 +28,13 @@ module.exports = OlzView.extend({
 		return this.el;
 	},
 	
-	boom: function() {
-		console.log("BOOM");
-	},
-	
 	onInput: function(ev) {
 		if(ev.keyCode == 13) {
 			var content = this.$("#new-loop-input").val();
-			this.trigger("enter-pressed", content);
+			if(content.length > 0) {
+				this.$("#new-loop-input").val("");
+				this.trigger("enter-pressed", content);
+			}
 		}
 	}
 	
