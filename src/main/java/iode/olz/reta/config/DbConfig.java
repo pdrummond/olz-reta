@@ -18,7 +18,7 @@ public class DbConfig {
 		try {
 			String username = "pdrummond";
 			String password = "pdrummond";
-			String url = "jdbc:postgresql://localhost/olsio";
+			String url = "jdbc:postgresql://localhost/olz-reta";
 			String dbProperty = System.getProperty("database.url");
 			if(dbProperty != null) {
 				dbUri = new URI(dbProperty);

@@ -1,23 +1,23 @@
 package iode.olz.reta.handler;
 
 import iode.olz.reta.messages.NewLoopMessage;
+import iode.olz.reta.result.OlzResult;
 
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class NewLoopMessageHandler extends AbstractMessageHandler {
 
-    @MessageMapping("/new_loop")
-    @SendTo("/topic/messages")
-    public NewLoopMessage onNewLoopMessage(NewLoopMessage message) throws Exception {
+    @MessageMapping("/new_loop")    
+    public OlzResult onNewLoopMessage(NewLoopMessage message) throws Exception {
     	
     	validateMessage();
     	parseMessageTags();
-    	persistMessage();
-    	
-        return message; 
+    	persistMessage();    	
+        broadcastMessage(message);
+        
+        return OlzResult.success();
     }
 
 	private void validateMessage() {		
