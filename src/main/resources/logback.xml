@@ -5,14 +5,14 @@
 	<logger name="org.springframework.web" level="error" />
 	<logger name="org.springframework" level="error"/>
 	<logger name="org.springframework.security" level="error" />
-	<logger name="org.springframework.jdbc" level="error" />
+	<logger name="org.springframework.jdbc" level="debug" />
 	<logger name="org.springframework.messaging" level="error" />
 	<logger name="org.springframework.social" level="error" />
 	<logger name="iode.olz.reta" level="debug" />
 
 	<logger name="org.springframework.security.web.authentication" level="error" /> <!-- TO SHOW AUTHENTICATION ERRORS (which are debug log level for some reason) -->
 
-	<root level="error">
+	<root level="info">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>

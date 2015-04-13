@@ -5,6 +5,8 @@ import iode.olz.reta.dao.LoopItem;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
@@ -32,18 +34,19 @@ public class JdbcLoopItemRepository extends OlzRepository implements LoopItemRep
 				});		
 	}
 
-	private String createLoopItemPs(LoopItem loopItem, PreparedStatement ps) throws SQLException {
+	private String createLoopItemPs(LoopItem loopItem, PreparedStatement ps) throws SQLException {		
 		String id = loopItem.getId();
 		if(id == null) {
 			id = UUID.randomUUID().toString();
 		}
+		Timestamp now = toTimestamp(new Date());
 		int idx = 0;
 		ps.setString(++idx, id);
 		ps.setInt(++idx, loopItem.getItemType().getTypeId());
 		ps.setString(++idx, loopItem.getContent());
 		ps.setBoolean(++idx, loopItem.isArchived());
-		ps.setTimestamp(++idx, toTimestamp(loopItem.getCreatedAt()));
-		ps.setTimestamp(++idx, toTimestamp(loopItem.getUpdatedAt()));
+		ps.setTimestamp(++idx, now);
+		ps.setTimestamp(++idx, now);
 		ps.setString(++idx, loopItem.getCreatedBy());
 		ps.setString(++idx, loopItem.getUpdatedBy());
 		return id;

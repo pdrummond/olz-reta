@@ -7,6 +7,7 @@ var SockJS = require('sockjs');
 var Stomp = require('stomp');
 
 var LoopListWidget= require('./LoopListWidget');
+var OlzItemCollection = require('./OlzItemCollection');
 
 module.exports = Backbone.View.extend({
 	
@@ -14,11 +15,23 @@ module.exports = Backbone.View.extend({
 	template: _.template($('#AppViewTemplate').html()),
 		
 	initialize: function() {
-		this.loopListWidget = new LoopListWidget();
+		this.olzItemCollection = new OlzItemCollection();
+		this.loopListWidget = new LoopListWidget({collection: this.olzItemCollection});
 		this.listenTo(this.loopListWidget, 'new-loop-message', this.onNewLoopMessage);
 		
+		var self = this;
 		this.webSocketConnect(function() {
 			console.log("Connected to OLZ-RETA");
+			self.fetchOlzItems();
+		});
+	},
+	
+	fetchOlzItems: function() {
+		this.olzItemCollection.fetch({
+			reset:true,
+			success:function() {
+				console.log("BOOM!");
+			}
 		});
 	},
 	

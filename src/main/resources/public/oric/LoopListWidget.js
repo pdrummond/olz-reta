@@ -18,8 +18,8 @@ module.exports = OlzView.extend({
 	id:"LoopListWidget",
 	template: _.template($('#LoopListWidgetTemplate').html()),
 
-	initialize: function() {
-		this.loopListView = new LoopListView();
+	initialize: function(options) {
+		this.loopListView = new LoopListView({collection: options.collection});
 		this.loopInputView = new LoopInputView();
 		
 		this.listenTo(this.loopInputView, 'enter-pressed', this.onInputViewEnterPressed);

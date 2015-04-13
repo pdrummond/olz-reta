@@ -2,6 +2,7 @@ CREATE EXTENSION "uuid-ossp";
 
 CREATE TABLE loopItems (
 	id UUID NOT NULL DEFAULT uuid_generate_v4(),
+	itemType INTEGER NOT NULL DEFAULT 1,
 	content TEXT,
 	archived BOOLEAN NOT NULL DEFAULT false,
 	createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),

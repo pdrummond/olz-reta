@@ -3,8 +3,8 @@ package iode.olz.reta.dao;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LoopItem extends OlzItem {
-	private String content;
-	private Boolean archived;
+	private final String content;
+	private final Boolean archived;
 	
 	public LoopItem(
 			@JsonProperty("id") String id,
@@ -25,6 +25,23 @@ public class LoopItem extends OlzItem {
 	}
 
 	public Boolean isArchived() {
-		return archived;
+		return archived==null?Boolean.FALSE:archived;
+	}
+	
+	public static class Builder extends OlzItem.Builder {
+		private String content;
+		private Boolean archived;
+		public Builder content(String val) 		{ this.content = val; return this;}
+		public Builder archived(Boolean val)	{ this.archived = val; return this;}
+		
+		public LoopItem build() {
+			return new LoopItem(this);
+		}
+	}
+	
+	private LoopItem(Builder b) {
+		super(b);
+		this.content = b.content;
+		this.archived = b.archived;
 	}
 }

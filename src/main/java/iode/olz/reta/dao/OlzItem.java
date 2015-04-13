@@ -54,4 +54,34 @@ public class OlzItem {
 	public String getUpdatedBy() {
 		return updatedBy;
 	}
+	
+	public static class Builder {
+		private String id;
+		private OlzItemType itemType = OlzItemType.LOOP_ITEM;
+		private String createdBy;
+		private long createdAt;
+		private String updatedBy;
+		private long updatedAt;
+		
+		public Builder id(String val) 				{ this.id = val; return this;}
+		public Builder itemType(OlzItemType val) 	{ this.itemType = val; return this;}
+		public Builder createdBy(String val) 		{ this.createdBy = val; return this;}
+		public Builder updatedBy(String val) 		{ this.updatedBy = val; return this;}
+		public Builder createdAt(long val) 			{ this.createdAt = val; return this;}
+		public Builder updatedAt(long val) 			{ this.updatedAt = val; return this;}
+
+		public OlzItem build() {
+			return new OlzItem(this);
+		}
+	}
+	
+	protected OlzItem(Builder b) {
+		this.id = b.id;
+		this.itemType = b.itemType;
+		this.createdBy = b.createdBy;
+		this.updatedBy = b.updatedBy;
+		this.createdAt = b.createdAt;
+		this.updatedAt = b.updatedAt;
+	}
+
 }
