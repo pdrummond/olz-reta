@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>OpenLoopz Signup</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+   	<link href="oric/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel='stylesheet' type='text/css' href='/css/base.css'/>
+    <link rel='stylesheet' type='text/css' href='/css/font-awesome.min.css'/>    
+	<link rel="icon" href="/images/olz-icon.ico"/>
+	<script type="text/javascript" id="GoogleAnalyticsTemplate" th:include="Oric/GoogleAnalyticsTemplate :: #template"></script>
+	
+</head>
+<body>
+<div id="register-form" class="container">
+    	<p align="center"><a href="/welcome"><img class='logo' src='/images/openloopz-logo.png'/></a></p>
+		<h4 align="center">OpenLoopz Sign-up</h4>
+		<div class="alert alert-success" style="width:400px;margin:auto auto;text-align:center">
+		<strong>Two ticks, we'll have you signed up in no time!</strong>
+		<p>We just need your username and password to create your account, and an email address so we can confirm you
+		are a real human.</p> 
+		</div>
+    <form class="form-signin" action="#" th:action="@{/register}" th:object="${user}" method="post" role="form">    	
+    	<div class="form-group form-widget" >
+    		<div class="input-group">
+				<span class="input-group-addon">@</span>
+  				<input class="form-control" placeholder="Username" required="required" type="text" th:field="*{userId}" />
+			</div>
+			<a class="btn btn-borderless form-question-button" data-toggle="popover" title="Choose Carefully!" data-content="This will be used by your friends to @mention you in loop content."><i class='fa fa-question-circle'></i></a>
+		</div>
+    	<input class="form-control form-widget" placeholder="Email" required="required" type="email" th:field="*{email}" />
+        <input class="form-control form-widget" placeholder="Password" required="required" type="password" th:field="*{password}" />
+        <input class="form-control form-widget" placeholder="Confirm Password" required="required" type="password" th:field="*{passwordConfirm}" />
+        <p><i>Go on, tell us a bit about yourself...</i></p>
+        <input class="form-control form-widget" placeholder="First Name (Optional)" type="text" th:field="*{firstName}" />
+        <input class="form-control form-widget" placeholder="Surname (Optional)" type="text" th:field="*{surname}" />
+               
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign-up!</button>
+        
+        <p align="center" style="margin-top:10px"><i>If you already have an account, log-in <a href="/login">here.</a></i></p>
+    </form>
+    </div>
+    
+    <script>
+	    $(function () {
+	    	$('[data-toggle="popover"]').popover();
+	    })
+    </script>
+    <script src="oric/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="oric/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>	
+    
+</body>
+</html>

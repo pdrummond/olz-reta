@@ -1,24 +1,61 @@
 package iode.olz.reta.config;
 
+import javax.sql.DataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfFilter;
 
-//@Configuration
-class WebSecurityConfig { //extends GlobalAuthenticationConfigurerAdapter {
+@Configuration
+@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableWebMvcSecurity //"Mvc" gives us Thymeleaf csrf support
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	/*@Override
-	public void init(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService());
+	@Autowired
+	DataSource dataSource;
+	
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		auth
+		.jdbcAuthentication()
+		.passwordEncoder(passwordEncoder())
+		.dataSource(dataSource)
+		.rolePrefix("")
+		.usersByUsernameQuery("SELECT userId AS username, password, enabled FROM users WHERE userId=?")               
+		.authoritiesByUsernameQuery("SELECT userId AS username, authority FROM authorities WHERE userId = ?");
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder();
 	}
 
-	@Bean
-	UserDetailsService userDetailsService() {
-		
-		
-		return new UserDetailsService() {			
-			@Override
-			public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-				List<GrantedAuthority> authList = AuthorityUtils.createAuthorityList("USER", "write");
-				return new User("pdrummond", "pdrummond", true, true, true, true, authList);				
-			}
-		};
-	}*/
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http		
+		.addFilterAfter(new CsrfTokenGeneratorFilter(), CsrfFilter.class)	
+		.authorizeRequests()		
+		.antMatchers(
+				"/", "/img/**", "/js/**", "/css/**", "/images/**", "/videos/**", "/fonts/**", 
+				"/pusher/auth",				
+				"/login", "/register", "/register-success", "/register-failure", "/register-failure-no-invite",
+				"/confirm", "/confirm/**", "/confirm-success", "/confirm-failure", "/confirm-failure-expired",
+				"/register-interest", "/register-interest-success", "/register-interest-failure", "/user/interest",
+				"/forgot-password", "/reset-password/**",
+				"/about", "/welcome", "/terms", "/privacy").permitAll()
+				.anyRequest().authenticated()	
+				.and()
+				.formLogin()
+				.loginPage("/login")							
+				.permitAll()
+				.and()
+				.csrf();
+	}
 }

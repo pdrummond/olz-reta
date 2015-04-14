@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>OpenLoopz Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <link href="oric/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel='stylesheet' type='text/css' href='/css/base.css'/>
+	<link rel="icon" href="/images/olz-icon.ico"/>
+	<link rel='stylesheet' type='text/css' href='/css/font-awesome.min.css'/>
+    <script type="text/javascript" id="GoogleAnalyticsTemplate" th:include="Oric/GoogleAnalyticsTemplate :: #template"></script>
+    
+</head>
+<body>
+
+ <div class="container">  	  
+      <form th:action="@{/login}" method="post" class="form-signin" role="form">
+	    <p align="center"><a href="/welcome"><img class='logo' src='/images/openloopz-logo.png'/></a></p>
+        <h4 align="center" class="form-signin-heading">Please sign in</h4>
+        <div th:if="${param.error}">
+            <div class='alert alert-danger' ><i class='fa fa-exclamation-circle fa-3x pull-left'></i> <strong>Invalid username or password. </strong> Please try again.</div>
+        </div>
+        <div th:if="${param.logout}">
+            <div class='alert alert-warning'>You have been logged out</div>
+        </div>
+        <input name="username" type="username" class="form-control" placeholder="Username" required="true" autofocus="true"></input>
+        <input name="password" type="password" class="form-control" placeholder="Password" required="true" style="margin-top:10px;"></input>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <div class="checkbox" style="text-align: center;font-size: 16px;">
+          <label style="padding:10px">
+            <input type="checkbox" name="remember-me" checked="checked"> Remember me</input>
+          </label>
+        </div>
+        <p align="center" style="margin-top:30px;"><i>Forgot password? Click <a href="/forgot-password">here.</a></i></p>
+        <p align="center"><i>If you don't have an account, sign-up <a href="/register">here.</a></i></p>
+      </form>
+    </div>
+</body>
+</html>

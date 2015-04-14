@@ -1,6 +1,7 @@
 package iode.olz.reta.controller;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import iode.olz.reta.dao.RegistrationFormUser;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +17,8 @@ public class MainController {
 	}
 	
 	@RequestMapping(value = "/welcome", method=GET)
-	public String welcome(Model model) {				
+	public String welcome(Model model) {
+		model.addAttribute("user", new RegistrationFormUser());
 		return "welcome";
 	}
 

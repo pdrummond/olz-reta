@@ -28,3 +28,21 @@ CREATE TABLE hashTags (
 	createdBy TEXT, 
 	updatedBy TEXT
 );
+
+CREATE TABLE users (
+      userId TEXT NOT NULL,
+      password TEXT NOT NULL,
+      email TEXT NOT NULL, 
+      firstName TEXT,
+      surname TEXT,      
+      enabled boolean NOT NULL,
+	  createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+	  updatedAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+      CONSTRAINT pkUsers PRIMARY KEY (userId)
+);
+
+create table authorities (
+      userId TEXT NOT NULL,
+      authority TEXT NOT NULL,
+      CONSTRAINT fkAuthoritiesUsers FOREIGN KEY (userId) REFERENCES users(userId)  
+);
