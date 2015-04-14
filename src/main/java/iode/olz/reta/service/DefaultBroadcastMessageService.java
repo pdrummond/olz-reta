@@ -1,4 +1,4 @@
-package iode.olz.reta.handler.broadcast;
+package iode.olz.reta.service;
 
 import iode.olz.reta.messages.OlzMessage;
 
