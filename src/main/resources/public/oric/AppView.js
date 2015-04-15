@@ -13,11 +13,16 @@ module.exports = Backbone.View.extend({
 	
 	el: $("body"),
 	template: _.template($('#AppViewTemplate').html()),
+	
+	events: {
+		'click #logout-link': 'onLogout',
+	},
 		
 	initialize: function() {
 		this.olzItemCollection = new OlzItemCollection();
 		this.loopListWidget = new LoopListWidget({collection: this.olzItemCollection});
 		this.listenTo(this.loopListWidget, 'new-loop-message', this.onNewLoopMessage);
+		this.listenTo(this.loopListWidget, 'filter-message', this.onFilterMessage);
 		
 		var self = this;
 		this.webSocketConnect(function() {
@@ -60,6 +65,10 @@ module.exports = Backbone.View.extend({
 		this.sendMessage("new_loop", message);		
 	},
 	
+	onFilterMessage: function(message) {
+		this.sendMessage("filter_message", message);		
+	},
+	
 	sendMessage: function(messageName, messageContent) {        
         this.stompClient.send("/app/" + messageName, {}, JSON.stringify(messageContent));
     },
@@ -72,5 +81,13 @@ module.exports = Backbone.View.extend({
     
     scrollBottom: function() {
     	window.scrollTo(0,document.body.scrollHeight);
-    }
+    },
+    
+    onLogout: function() {
+		$.post("/logout", function() {
+			window.location.href = "/welcome";
+		}).fail(function(resp) {
+			console.error("Error logging out: " + resp);
+		});
+	},
 });

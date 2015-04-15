@@ -43,8 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.addFilterAfter(new CsrfTokenGeneratorFilter(), CsrfFilter.class)	
 		.authorizeRequests()		
 		.antMatchers(
-				"/", "/img/**", "/js/**", "/css/**", "/images/**", "/videos/**", "/fonts/**", 
-				"/pusher/auth",				
+				"/", "/oric/**", "/img/**", "/js/**", "/css/**", "/images/**", "/videos/**", "/fonts/**", 				
 				"/login", "/register", "/register-success", "/register-failure", "/register-failure-no-invite",
 				"/confirm", "/confirm/**", "/confirm-success", "/confirm-failure", "/confirm-failure-expired",
 				"/register-interest", "/register-interest-success", "/register-interest-failure", "/user/interest",

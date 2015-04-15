@@ -2,6 +2,7 @@ package iode.olz.reta.repo;
 
 import iode.olz.reta.dao.LoopItem;
 import iode.olz.reta.dao.OlzItemType;
+import iode.olz.reta.dao.UserTag;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +23,21 @@ public class JdbcLoopItemRepository extends OlzRepository implements LoopItemRep
 	private final Logger log = Logger.getLogger(JdbcLoopItemRepository.class);
 	private static final String LOOP_ITEM_SELECT_SQL = "SELECT l.id, l.itemType, l.content, l.archived, l.createdAt, l.createdBy, l.updatedAt, l.updatedBy FROM loopItems l ";
 	private static final String CREATE_LOOP_ITEM_SQL = "INSERT INTO loopItems (id, itemType, content, archived, createdAt, updatedAt, createdBy, updatedBy) values(UUID(?),?,?,?,?,?,?,?)";
+	private static final String LOOP_ITEM_ORDER_SQL = " ORDER BY createdAt DESC";
+	private static final String LOOP_ITEM_LIMIT = "50";
+	
+	@Override
+	public List<LoopItem> getPageOfLoopItems(Date fromDate) {
+		
+		//TODO: This will need to join with the activityItem table when it's implemented
+		
+		Timestamp fromDateTs = getFromDateTs(fromDate);
+		return jdbcTemplate.query(
+				LOOP_ITEM_SELECT_SQL + " WHERE createdAt < ?" 
+				+ LOOP_ITEM_ORDER_SQL + " LIMIT " + LOOP_ITEM_LIMIT, 
+				new Object[] {fromDateTs},			
+				new DefaultLoopItemRowMapper());		
+	}
 
 	@Override
 	public LoopItem getLoopItem(String id) {
@@ -67,8 +83,8 @@ public class JdbcLoopItemRepository extends OlzRepository implements LoopItemRep
 		ps.setBoolean(++idx, loopItem.isArchived());
 		ps.setTimestamp(++idx, now);
 		ps.setTimestamp(++idx, now);
-		ps.setString(++idx, loopItem.getCreatedBy());
-		ps.setString(++idx, loopItem.getUpdatedBy());
+		ps.setString(++idx, loopItem.getCreatedBy().getTag());
+		ps.setString(++idx, loopItem.getUpdatedBy().getTag());
 		return id;
 	}
 
@@ -80,9 +96,9 @@ public class JdbcLoopItemRepository extends OlzRepository implements LoopItemRep
 					rs.getString("content"),
 					rs.getBoolean("archived"),
 					toDateLong(rs.getTimestamp("createdAt")),
-					rs.getString("createdBy"),
+					new UserTag(rs.getString("createdBy")),
 					toDateLong(rs.getTimestamp("updatedAt")),
-					rs.getString("updatedBy"));
+					new UserTag(rs.getString("updatedBy")));
 		}
 	}
 

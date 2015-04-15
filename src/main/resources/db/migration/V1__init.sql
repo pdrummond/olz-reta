@@ -29,13 +29,19 @@ CREATE TABLE hashTags (
 	updatedBy TEXT
 );
 
+CREATE TABLE userSettings (
+    userId TEXT NOT NULL,
+    filterQuery TEXT
+);
+
 CREATE TABLE users (
       userId TEXT NOT NULL,
-      password TEXT NOT NULL,
+      password TEXT,
       email TEXT NOT NULL, 
       firstName TEXT,
-      surname TEXT,      
+      surname TEXT, 
       enabled boolean NOT NULL,
+      filter TEXT,
 	  createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 	  updatedAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
       CONSTRAINT pkUsers PRIMARY KEY (userId)

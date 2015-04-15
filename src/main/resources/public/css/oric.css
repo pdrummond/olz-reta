@@ -7,6 +7,16 @@ body {
 	padding-bottom: 50px;
 }
 
+#filter-input {
+  position: fixed;
+  z-index:9999;
+  top: 60px;
+  left: 0;  
+  width: 100%;  
+  padding:10px;  
+}
+
+
 #new-loop-input {
   position: fixed;
   bottom: 0;

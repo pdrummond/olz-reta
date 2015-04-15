@@ -19,7 +19,9 @@ module.exports = OlzView.extend({
 	},
 		
 	render: function() {		
-		this.$el.html(this.template(this.message));
+		this.$el.html(this.template());
+		this.$("#item-content").html(this.message.content);
+		//this.$("#item-image").html(this.generateUserImage());
 		return this.el;
 	}
 });

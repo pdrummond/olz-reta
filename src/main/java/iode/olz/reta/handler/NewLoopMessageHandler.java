@@ -3,12 +3,15 @@ package iode.olz.reta.handler;
 import iode.olz.reta.dao.HashTag;
 import iode.olz.reta.dao.LoopItem;
 import iode.olz.reta.dao.ParsedTags;
+import iode.olz.reta.dao.UserTag;
 import iode.olz.reta.messages.NewLoopMessage;
 import iode.olz.reta.repo.HashTagRepository;
 import iode.olz.reta.repo.LoopItemRepository;
 import iode.olz.reta.result.OlzResult;
 import iode.olz.reta.service.BroadcastMessageService;
 import iode.olz.reta.service.TagParserService;
+
+import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -31,20 +34,32 @@ public class NewLoopMessageHandler extends AbstractMessageHandler {
 
 
     @MessageMapping("/new_loop")    
-    public OlzResult onNewLoopMessage(NewLoopMessage message) throws Exception {
+    public OlzResult onNewLoopMessage(NewLoopMessage message, Principal principal) throws Exception {
     	
-    	validateMessage(message);
-    	LoopItem loopItem = persistNewLoop(message);
+    	validateMessage(message);    	
+    	LoopItem loopItem = createLoopItem(message, principal);
+    	loopItem = persistNewLoop(loopItem);
+    	
         broadcastMessage(message);        
         extractAndPersistHashTags(loopItem);
         return OlzResult.success();
     }
 
+	private LoopItem createLoopItem(NewLoopMessage message, Principal principal) {
+		UserTag curUserTag = getUserTagFromPrincipal(principal);
+		LoopItem loopItem = new LoopItem.Builder()
+			.createdBy(curUserTag)
+			.updatedBy(curUserTag)
+			.content(message.getContent())			
+			.build();
+		return loopItem;
+	}
+
 	private void validateMessage(NewLoopMessage message) {		
 	}
 
-	private LoopItem persistNewLoop(NewLoopMessage message) {
-		return loopItemRepo.createLoopItem(new LoopItem.Builder().content(message.getContent()).build());
+	private LoopItem persistNewLoop(LoopItem loopItem) {
+		return loopItemRepo.createLoopItem(loopItem);
 	} 
 	
 	private void broadcastMessage(NewLoopMessage message) {

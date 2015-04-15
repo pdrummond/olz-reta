@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<link rel="icon" href="/images/olz-icon.ico"/>
+    <title>OpenLoopz Registration</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel='stylesheet' type='text/css' href="/oric/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+   <script type="text/javascript" id="GoogleAnalyticsTemplate" th:include="Cal/GoogleAnalyticsTemplate :: #template"></script>
+</head>
+<body>
+	<div class="container" style="width:600px;margin-top:200px">
+		<p align="center"><a href="/welcome"><img class='logo' src='/images/openloopz-logo.png'/></a></p>
+		<div class="alert alert-danger" role="alert" style="margin-top:20px">
+			<h4 align="center">Something went wrong</h4>
+			<p align="center" th:text="${errorMessage}"></p>
+			<p align="center">Please <a href="/register">try again</a>.</p>
+			
+		</div>
+   	</div>
+</body>
+
+</html>

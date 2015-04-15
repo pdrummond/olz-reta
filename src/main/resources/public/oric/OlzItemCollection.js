@@ -11,6 +11,6 @@ module.exports = Backbone.Collection.extend({
 	},
 
 	url: function() {
-		return "/rest/olz-items";
+		return "/rest/loop-items";
 	}
 });

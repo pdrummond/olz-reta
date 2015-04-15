@@ -1,8 +1,8 @@
 package iode.olz.reta.controller;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import iode.olz.reta.dao.OlzItem;
-import iode.olz.reta.repo.OlzItemRepository;
+import iode.olz.reta.dao.LoopItem;
+import iode.olz.reta.repo.LoopItemRepository;
 
 import java.security.Principal;
 import java.util.Date;
@@ -15,27 +15,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("rest/olz-items")
-public class OlzItemController {
-	private final Logger log = Logger.getLogger(OlzItemController.class);
+@RequestMapping("rest/loop-items")
+public class LoopItemController {
+	private final Logger log = Logger.getLogger(LoopItemController.class);
 	
 	@Autowired
-	OlzItemRepository olzItemRepo;
+	LoopItemRepository loopItemRepo;
 
 	@RequestMapping(method=GET)
-	public List<OlzItem> getOlzItems(@RequestParam(value="fromDate", required=false) Long from, Principal principal) {		
+	public List<LoopItem> getOlzItems(@RequestParam(value="fromDate", required=false) Long from, Principal principal) {		
 		if(log.isDebugEnabled()) {
-			log.debug("> getOlzItems(from="+ from + ")");
+			log.debug("> getLoopItems(from="+ from + ")");
 		}
 		
 		Date fromDate = null;
 		if(from != null ) {
 			fromDate = new Date(from);
 		}
-		List<OlzItem> olzItems = olzItemRepo.getPageOfItems(fromDate);
+		List<LoopItem> olzItems = loopItemRepo.getPageOfLoopItems(fromDate);
 
 		if(log.isDebugEnabled()) {
-			log.debug("< getOlzItems()");
+			log.debug("< getLoopItems()");
 		}
 		return olzItems;
 	}

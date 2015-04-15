@@ -52,7 +52,7 @@ public class JdbcOlzUserRepository extends OlzRepository implements OlzUserRepos
 					public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 						PreparedStatement ps = connection.prepareStatement(CREATE_USER_SQL);
 						int idx = 0;
-						ps.setString(++idx, user.getUserId());
+						ps.setString(++idx, user.getUserId());						
 						ps.setString(++idx, user.getEmail());
 						ps.setString(++idx, user.getFirstName());
 						ps.setString(++idx, user.getSurname());

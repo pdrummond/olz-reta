@@ -56,7 +56,7 @@ public class OlzUser {
 	}
 	
 	public Boolean getEnabled() {
-		return enabled;
+		return enabled == null?Boolean.FALSE:enabled;
 	}
 	
 	public static class Builder {
@@ -66,7 +66,7 @@ public class OlzUser {
 		private String surname;
 		private Long createdAt;
 		private Long updatedAt;
-		private Boolean enabled;
+		private Boolean enabled = Boolean.TRUE;
 		
 		public Builder userId(String val) 		{ this.userId = val; return this;}
 		public Builder email(String val) 		{ this.email = val; return this;}
