@@ -70,7 +70,7 @@ module.exports = Backbone.View.extend({
 	},
 	
 	onFilterInputViewEnterPressed: function(query) {
-		var message = {query: query};
+		var message = {content: query};
 		this.onFilterMessage(message);
 	},
 	
@@ -84,7 +84,7 @@ module.exports = Backbone.View.extend({
 	},
 	
 	onFilterMessage: function(message) {
-		this.sendMessage("filter_message", message);		
+		this.sendMessage("filter-message", message);		
 	},
 	
 	sendMessage: function(messageName, messageContent) {        
@@ -94,10 +94,14 @@ module.exports = Backbone.View.extend({
     dispatchMessage: function(message) {
     	console.log("MESSAGE: " + JSON.stringify(message));
     	var messageModel = new Backbone.Model(message);
-    	if(message.messageType == "CHAT_MESSAGE") {
+    	switch(message.messageType) {
+    	case "CHAT_MESSAGE": {
     		var view = this.messageListView.addMessageView(messageModel);
+        	this.scrollBottom();
+    		break;
     	}
-    	this.scrollBottom();
+    	default: console.log("MESSAGE RECIEVED: " + message.messageType); break;
+    	}
     },
     
     scrollBottom: function() {
