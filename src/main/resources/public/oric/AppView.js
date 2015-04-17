@@ -6,8 +6,11 @@ var Backbone = require('backbone');
 var SockJS = require('sockjs');
 var Stomp = require('stomp');
 
-var TabView= require('./TabView');
 var MessageCollection = require('./MessageCollection');
+var FilterInputView = require('./FilterInputView');
+var MessageListView = require('./MessageListView');
+var QuickAddInputView = require('./QuickAddInputView');
+
 
 module.exports = Backbone.View.extend({
 	
@@ -19,10 +22,13 @@ module.exports = Backbone.View.extend({
 	},
 		
 	initialize: function() {
-		this.olzItemCollection = new MessageCollection();
-		this.tabView = new TabView({collection: this.olzItemCollection});
-		this.listenTo(this.tabView, 'chat-message', this.onChatMessage);
-		this.listenTo(this.tabView, 'filter-message', this.onFilterMessage);
+		this.messageCollection = new MessageCollection();
+		this.filterInputView = new FilterInputView();
+		this.messageListView = new MessageListView({collection: this.messageCollection});
+		this.quickAddInputView = new QuickAddInputView();
+		
+		this.listenTo(this.filterInputView, 'enter-pressed', this.onFilterInputViewEnterPressed);
+		this.listenTo(this.quickAddInputView, 'enter-pressed', this.onQuickAddInputViewEnterPressed);
 		
 		var self = this;
 		this.webSocketConnect(function() {
@@ -32,7 +38,7 @@ module.exports = Backbone.View.extend({
 	},
 	
 	fetchOlzItems: function() {
-		this.olzItemCollection.fetch({
+		this.messageCollection.fetch({
 			reset:true,
 			success:function() {
 				console.log("BOOM!");
@@ -42,7 +48,9 @@ module.exports = Backbone.View.extend({
 	
 	render: function() {
 		this.$el.html(this.template());
-		$("#loop-list-widget-container").html(this.tabView.render());		
+		this.$("#filter-input-view-container").html(this.filterInputView.render());		
+		this.$("#message-list-view-container").html(this.messageListView.render());
+		this.$("#quick-add-input-view-container").html(this.quickAddInputView.render());		
 	},
 	
 	webSocketConnect: function(callback) {
@@ -61,6 +69,16 @@ module.exports = Backbone.View.extend({
 		});
 	},
 	
+	onFilterInputViewEnterPressed: function(query) {
+		var message = {query: query};
+		this.onFilterMessage(message);
+	},
+	
+	onQuickAddInputViewEnterPressed: function(content) {
+		var message = {content: content};
+		this.onChatMessage(message);
+	},
+	
 	onChatMessage: function(message) {
 		this.sendMessage("chat-message", message);		
 	},
@@ -77,7 +95,7 @@ module.exports = Backbone.View.extend({
     	console.log("MESSAGE: " + JSON.stringify(message));
     	var messageModel = new Backbone.Model(message);
     	if(message.messageType == "CHAT_MESSAGE") {
-    		var view = this.tabView.addMessage(messageModel);
+    		var view = this.messageListView.addMessageView(messageModel);
     	}
     	this.scrollBottom();
     },

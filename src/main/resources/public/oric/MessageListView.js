@@ -7,7 +7,7 @@ var Backbone = require('backbone');
 var MessageView = require("./MessageView");
 
 module.exports = Backbone.View.extend({
-	id:"LoopListView",	
+	id:"MessageListView",	
 	template: _.template($('#MessageListViewTemplate').html()),
 	
 	initialize: function(options) {
