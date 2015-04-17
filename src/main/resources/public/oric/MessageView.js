@@ -4,15 +4,13 @@ var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
 
-var OlzView = require("./OlzView");
-
-module.exports = OlzView.extend({
+module.exports = Backbone.View.extend({
 	
-	id:"LoopItemView",
+	id:"MessageView",
 	
 	tagName:"li",
 	
-	template: _.template($('#LoopItemViewTemplate').html()),
+	template: _.template($('#MessageViewTemplate').html()),
 	
 	initialize: function(options) {
 		this.message = options.message;
@@ -20,7 +18,7 @@ module.exports = OlzView.extend({
 		
 	render: function() {		
 		this.$el.html(this.template());
-		this.$("#item-content").html(this.message.content);
+		this.$("#message-content").html(this.model.get('content'));
 		//this.$("#item-image").html(this.generateUserImage());
 		return this.el;
 	}

@@ -20,7 +20,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcHashTagRepository extends OlzRepository implements HashTagRepository {
+public class JdbcHashTagRepository extends AbstractJdbcRepository implements HashTagRepository {
 	private static final String HASHTAG_SELECT_SQL = "SELECT id, loopItemId, tag, tagName, longValue, doubleValue, textValue, color, hashTagType, valueType, createdAt, createdBy, updatedAt, updatedBy FROM hashTags ";
 	//private final Logger log = Logger.getLogger(JdbcHashTagRepository.class);
 

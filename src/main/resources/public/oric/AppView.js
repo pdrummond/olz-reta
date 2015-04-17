@@ -6,8 +6,8 @@ var Backbone = require('backbone');
 var SockJS = require('sockjs');
 var Stomp = require('stomp');
 
-var LoopListWidget= require('./LoopListWidget');
-var OlzItemCollection = require('./OlzItemCollection');
+var TabView= require('./TabView');
+var MessageCollection = require('./MessageCollection');
 
 module.exports = Backbone.View.extend({
 	
@@ -19,10 +19,10 @@ module.exports = Backbone.View.extend({
 	},
 		
 	initialize: function() {
-		this.olzItemCollection = new OlzItemCollection();
-		this.loopListWidget = new LoopListWidget({collection: this.olzItemCollection});
-		this.listenTo(this.loopListWidget, 'new-loop-message', this.onNewLoopMessage);
-		this.listenTo(this.loopListWidget, 'filter-message', this.onFilterMessage);
+		this.olzItemCollection = new MessageCollection();
+		this.tabView = new TabView({collection: this.olzItemCollection});
+		this.listenTo(this.tabView, 'chat-message', this.onChatMessage);
+		this.listenTo(this.tabView, 'filter-message', this.onFilterMessage);
 		
 		var self = this;
 		this.webSocketConnect(function() {
@@ -42,7 +42,7 @@ module.exports = Backbone.View.extend({
 	
 	render: function() {
 		this.$el.html(this.template());
-		$("#loop-list-widget-container").html(this.loopListWidget.render());		
+		$("#loop-list-widget-container").html(this.tabView.render());		
 	},
 	
 	webSocketConnect: function(callback) {
@@ -61,8 +61,8 @@ module.exports = Backbone.View.extend({
 		});
 	},
 	
-	onNewLoopMessage: function(message) {
-		this.sendMessage("new_loop", message);		
+	onChatMessage: function(message) {
+		this.sendMessage("chat-message", message);		
 	},
 	
 	onFilterMessage: function(message) {
@@ -73,9 +73,12 @@ module.exports = Backbone.View.extend({
         this.stompClient.send("/app/" + messageName, {}, JSON.stringify(messageContent));
     },
     
-    dispatchMessage: function(message) {    	
+    dispatchMessage: function(message) {
     	console.log("MESSAGE: " + JSON.stringify(message));
-    	this.loopListWidget.addLoopItem(message);
+    	var messageModel = new Backbone.Model(message);
+    	if(message.messageType == "CHAT_MESSAGE") {
+    		var view = this.tabView.addMessage(messageModel);
+    	}
     	this.scrollBottom();
     },
     

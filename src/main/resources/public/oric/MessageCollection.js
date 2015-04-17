@@ -1,16 +1,16 @@
 var Backbone = require('backbone');
 var _ = require('underscore');
 
-var LoopItemModel = require('./LoopItemModel');
+var MessageModel = require('./MessageModel');
 
 module.exports = Backbone.Collection.extend({
-	model: LoopItemModel,
+	model: MessageModel,
 
 	comparator : function(loopItem) {
 		return loopItem.get('createdAt');
 	},
 
 	url: function() {
-		return "/rest/loop-items";
+		return "/rest/messages";
 	}
 });

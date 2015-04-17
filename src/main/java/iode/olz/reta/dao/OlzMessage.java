@@ -2,9 +2,9 @@ package iode.olz.reta.dao;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class LoopItem  {
+public class OlzMessage {
 	private String id;
-	private OlzItemType itemType;
+	private OlzMessageType messageType;
 	private final UserTag createdBy;
 	private final long createdAt;
 	private final UserTag updatedBy;
@@ -12,9 +12,9 @@ public class LoopItem  {
 	private final String content;
 	private final Boolean archived;
 	
-	public LoopItem(
+	public OlzMessage(
 			@JsonProperty("id") String id,
-			@JsonProperty("itemType") OlzItemType itemType,
+			@JsonProperty("itemType") OlzMessageType messageType,
 			@JsonProperty("content") String content,
 			@JsonProperty("archived") Boolean archived,
 			@JsonProperty("createdAt") long createdAt, 
@@ -22,7 +22,7 @@ public class LoopItem  {
 			@JsonProperty("updatedAt") long updatedAt, 
 			@JsonProperty("updatedBy") UserTag updatedBy) {
 		this.id = id;
-		this.itemType = itemType;
+		this.messageType = messageType;
 		this.createdAt = createdAt;
 		this.createdBy = createdBy;
 		this.updatedAt = updatedAt;
@@ -35,8 +35,8 @@ public class LoopItem  {
 		return id;
 	}
 	
-	public OlzItemType getItemType() {
-		return itemType;
+	public OlzMessageType getMessageType() {
+		return messageType;
 	}
 	
 	public long getCreatedAt() {
@@ -65,7 +65,7 @@ public class LoopItem  {
 	
 	public static class Builder {
 		private String id;
-		private OlzItemType itemType = OlzItemType.LOOP_ITEM;
+		private OlzMessageType messageType = OlzMessageType.CHAT_MESSAGE;
 		private UserTag createdBy;
 		private long createdAt;
 		private UserTag updatedBy;
@@ -73,23 +73,38 @@ public class LoopItem  {
 		private String content;
 		private Boolean archived;
 		
-		public Builder id(String val) 				{ this.id = val; return this;}
-		public Builder itemType(OlzItemType val) 	{ this.itemType = val; return this;}
-		public Builder createdBy(UserTag val) 		{ this.createdBy = val; return this;}
-		public Builder updatedBy(UserTag val) 		{ this.updatedBy = val; return this;}
-		public Builder createdAt(long val) 			{ this.createdAt = val; return this;}
-		public Builder updatedAt(long val) 			{ this.updatedAt = val; return this;}
-		public Builder content(String val) 			{ this.content = val; return this;}
-		public Builder archived(Boolean val)		{ this.archived = val; return this;}
+		public Builder() {
+			
+		}
 		
-		public LoopItem build() {
-			return new LoopItem(this);
+		public Builder(OlzMessage m) {
+			this.id = m.id;
+			this.messageType = m.messageType;
+			this.createdBy = m.createdBy;
+			this.createdAt = m.createdAt;
+			this.updatedBy = m.updatedBy;
+			this.updatedAt = m.updatedAt;
+			this.content = m.content;
+			this.archived = m.archived;
+		}
+		
+		public Builder id(String val) 					{ this.id = val; return this;}
+		public Builder messageType(OlzMessageType val) 	{ this.messageType = val; return this;}
+		public Builder createdBy(UserTag val) 			{ this.createdBy = val; return this;}
+		public Builder updatedBy(UserTag val) 			{ this.updatedBy = val; return this;}
+		public Builder createdAt(long val) 				{ this.createdAt = val; return this;}
+		public Builder updatedAt(long val) 				{ this.updatedAt = val; return this;}
+		public Builder content(String val) 				{ this.content = val; return this;}
+		public Builder archived(Boolean val)			{ this.archived = val; return this;}
+		
+		public OlzMessage build() {
+			return new OlzMessage(this);
 		}
 	}
 	
-	private LoopItem(Builder b) {
+	private OlzMessage(Builder b) {
 		this.id = b.id;
-		this.itemType = b.itemType;
+		this.messageType = b.messageType;
 		this.createdBy = b.createdBy;
 		this.updatedBy = b.updatedBy;
 		this.createdAt = b.createdAt;

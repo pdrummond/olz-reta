@@ -6,11 +6,11 @@ var Backbone = require('backbone');
 
 module.exports = Backbone.View.extend({
 	
-	id: "FilterInputView",
-	template: _.template($('#FilterInputViewTemplate').html()),
+	id: "QuickAddInputView",
+	template: _.template($('#QuickAddInputViewTemplate').html()),
 	
 	events: {
-		"keyup #filter-input": "onInput",
+		"keyup #quick-add-input": "onInput",
 	},
 		
 	initialize: function() {
@@ -24,9 +24,9 @@ module.exports = Backbone.View.extend({
 	
 	onInput: function(ev) {
 		if(ev.keyCode == 13) {
-			var content = this.$("#filter-input").val();
+			var content = this.$("#quick-add-input").val();
 			if(content.length > 0) {
-				this.$("#filter-input").val("");
+				this.$("#quick-add-input").val("");
 				this.trigger("enter-pressed", content);
 			}
 		}

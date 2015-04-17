@@ -1,6 +1,6 @@
 package iode.olz.reta.service;
 
-import iode.olz.reta.messages.OlzMessage;
+import iode.olz.reta.dao.OlzMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;

@@ -14,7 +14,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcOlzUserRepository extends OlzRepository implements OlzUserRepository {
+public class JdbcOlzUserRepository extends AbstractJdbcRepository implements OlzUserRepository {
 	private static final String USER_SELECT_SQL = "SELECT userId, email, firstName, surname, createdAt, updatedAt, enabled FROM users ";
 	private static final String CREATE_USER_SQL = "INSERT INTO users (userId, email, firstName, surname, createdAt, updatedAt, enabled) values(?,?,?,?,?,?,?)";
 	

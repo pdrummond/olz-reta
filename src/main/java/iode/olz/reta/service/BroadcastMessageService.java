@@ -1,6 +1,6 @@
 package iode.olz.reta.service;
 
-import iode.olz.reta.messages.OlzMessage;
+import iode.olz.reta.dao.OlzMessage;
 
 public interface BroadcastMessageService {
 

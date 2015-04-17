@@ -1,7 +1,7 @@
 package iode.olz.reta.service;
 
 import iode.olz.reta.dao.HashTag;
-import iode.olz.reta.dao.LoopItem;
+import iode.olz.reta.dao.OlzMessage;
 import iode.olz.reta.dao.ParsedTags;
 
 import java.util.ArrayList;
@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 public class DefaultTagParserService implements TagParserService {
 
 	@Override
-	public ParsedTags parseLoopItem(LoopItem loopItem) {
+	public ParsedTags parseLoopItem(OlzMessage loopItem) {
 		return new ParsedTags(extractHashTags(loopItem));
 	}
 	
-	public List<HashTag> extractHashTags(LoopItem loopItem) {
+	public List<HashTag> extractHashTags(OlzMessage loopItem) {
 		List<HashTag> hashTags = new ArrayList<HashTag>();
 		Pattern p = Pattern.compile("(#[\\w\\/-]+)");
 
