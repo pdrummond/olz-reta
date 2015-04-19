@@ -3,6 +3,7 @@ package iode.olz.reta.repo;
 import iode.olz.reta.dao.OlzMessage;
 import iode.olz.reta.dao.OlzMessageType;
 import iode.olz.reta.dao.UserTag;
+import iode.olz.reta.handler.FilterMessageHandler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JdbcMessageRepository extends AbstractJdbcRepository implements OlzMessageRepository {
 	private final Logger log = Logger.getLogger(JdbcMessageRepository.class);
-	private static final String MESSAGE_SELECT_SQL = "SELECT id, messageType, content, archived, createdAt, createdBy, updatedAt, updatedBy FROM messages ";
+	private static final String MESSAGE_SELECT_SQL = "SELECT m.id, m.messageType, m.content, m.archived, m.createdAt, m.createdBy, m.updatedAt, m.updatedBy FROM messages m";
 	private static final String CREATE_MESSAGE_SQL = "INSERT INTO messages (id, messageType, content, archived, createdAt, updatedAt, createdBy, updatedBy) values(UUID(?),?,?,?,?,?,?,?)";
 	private static final String MESSAGE_ORDER_SQL = " ORDER BY createdAt DESC";
 	private static final String MESSAGE_LIMIT = "50";
@@ -35,6 +36,32 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 				+ MESSAGE_ORDER_SQL + " LIMIT " + MESSAGE_LIMIT, 
 				new Object[] {fromDateTs},			
 				new DefaultOlzMessageRowMapper());		
+	}
+	
+	@Override
+	public List<OlzMessage> getPageOfMessagesWithFilter(Date fromDate, String query) {
+		
+		Timestamp fromDateTs = getFromDateTs(fromDate);
+		return jdbcTemplate.query(
+				MESSAGE_SELECT_SQL + ", hashtags h "
+				+ " WHERE h.messageId = m.id"
+				+ " AND h.tag ILIKE ? "
+				+ " AND m.createdAt < ?" 
+				+ MESSAGE_ORDER_SQL + " LIMIT " + MESSAGE_LIMIT, 
+				new Object[] {FilterMessageHandler.filterQuery, fromDateTs},			
+				new DefaultOlzMessageRowMapper());		
+	}
+	
+	@Override
+	public boolean filterMessage(OlzMessage message) {
+		List<OlzMessage> results = jdbcTemplate.query(
+				MESSAGE_SELECT_SQL + ", hashtags h "
+				+ " WHERE h.messageId = m.id"
+				+ " AND m.id = UUID(?)"
+				+ " AND h.tag ILIKE ? ", 
+				new Object[] {message.getId(), FilterMessageHandler.filterQuery},			
+				new DefaultOlzMessageRowMapper());	
+		return results.size() > 0;
 	}
 
 	@Override
@@ -53,7 +80,7 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 	@Override
 	public OlzMessage createMessage(final OlzMessage loopItem) {
 		if(log.isDebugEnabled()) {
-			log.debug("createLoop(" + loopItem + ")");
+			log.debug("> createMessage(" + loopItem + ")");
 		}
 		final String id[] = {loopItem.getId()};
 		jdbcTemplate.update(
@@ -64,7 +91,9 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 						return ps;
 					}
 				});	
-
+		if(log.isDebugEnabled()) {
+			log.debug("< createMessage()");
+		}
 		return getMessage(id[0]);
 	}
 
@@ -99,5 +128,4 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 					new UserTag(rs.getString("updatedBy")));
 		}
 	}
-
 }

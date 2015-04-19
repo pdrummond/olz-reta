@@ -5,5 +5,5 @@ import iode.olz.reta.dao.ParsedTags;
 
 public interface TagParserService {
 
-	public ParsedTags parseLoopItem(OlzMessage loopItem);
+	public ParsedTags parseMessage(OlzMessage message);
 }

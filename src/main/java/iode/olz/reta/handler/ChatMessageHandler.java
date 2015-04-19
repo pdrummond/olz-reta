@@ -12,6 +12,7 @@ import iode.olz.reta.service.BroadcastMessageService;
 import iode.olz.reta.service.TagParserService;
 
 import java.security.Principal;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -38,14 +39,15 @@ public class ChatMessageHandler extends AbstractMessageHandler {
     	message = fillMessage(message, principal);
     	message = validateMessage(message);    	
     	persistMessage(message);
-        broadcastMessage(message);        
-        extractAndPersistHashTags(message);
+    	extractAndPersistHashTags(message);
+        broadcastMessage(message);                
         return success();
     }
 
 	private OlzMessage fillMessage(OlzMessage message, Principal principal) {
 		UserTag curUserTag = getUserTagFromPrincipal(principal);
 		return new OlzMessage.Builder(message)
+				.id(message.getId()==null?UUID.randomUUID().toString():message.getId())
 				.messageType(OlzMessageType.CHAT_MESSAGE)
 				.createdBy(curUserTag)
 				.updatedBy(curUserTag)
@@ -65,7 +67,7 @@ public class ChatMessageHandler extends AbstractMessageHandler {
 	}
 	
 	private void extractAndPersistHashTags(OlzMessage message) {
-		ParsedTags parsedTags = tagParserService.parseLoopItem(message);
+		ParsedTags parsedTags = tagParserService.parseMessage(message);
 		for(HashTag hashTag : parsedTags.getHashTags()) {
 			hashTagRepo.createHashTag(hashTag);
 		}

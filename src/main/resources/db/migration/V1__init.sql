@@ -14,7 +14,7 @@ CREATE TABLE messages (
 
 CREATE TABLE hashTags (
 	id UUID NOT NULL DEFAULT uuid_generate_v4(),
-	loopItemId UUID,
+	messageId UUID,
 	tag TEXT,
 	tagName TEXT,
 	longValue BIGINT,

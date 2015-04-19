@@ -15,18 +15,18 @@ import org.springframework.stereotype.Service;
 public class DefaultTagParserService implements TagParserService {
 
 	@Override
-	public ParsedTags parseLoopItem(OlzMessage loopItem) {
-		return new ParsedTags(extractHashTags(loopItem));
+	public ParsedTags parseMessage(OlzMessage message) {
+		return new ParsedTags(extractHashTags(message));
 	}
 	
-	public List<HashTag> extractHashTags(OlzMessage loopItem) {
+	public List<HashTag> extractHashTags(OlzMessage message) {
 		List<HashTag> hashTags = new ArrayList<HashTag>();
 		Pattern p = Pattern.compile("(#[\\w\\/-]+)");
 
-		Matcher m = p.matcher(loopItem.getContent());
+		Matcher m = p.matcher(message.getContent());
 		while(m.find()) {
 			String match = m.group(1);
-			hashTags.add(new HashTag.Builder().loopItemId(loopItem.getId()).tag(match).build());			
+			hashTags.add(new HashTag.Builder().messageId(message.getId()).tag(match).build());			
 		}
 		return hashTags;
 	}

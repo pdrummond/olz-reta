@@ -2,12 +2,14 @@ package iode.olz.reta.controller;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import iode.olz.reta.dao.OlzMessage;
+import iode.olz.reta.handler.FilterMessageHandler;
 import iode.olz.reta.repo.OlzMessageRepository;
 
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +34,11 @@ public class OlzMessageController {
 		if(from != null ) {
 			fromDate = new Date(from);
 		}
-		List<OlzMessage> messages = messageRepo.getPageOfMessages(fromDate);
+		
+		List<OlzMessage> messages = 
+				StringUtils.isEmpty(FilterMessageHandler.filterQuery) 
+				? messageRepo.getPageOfMessages(fromDate) 
+				: messageRepo.getPageOfMessagesWithFilter(fromDate, FilterMessageHandler.filterQuery);
 
 		if(log.isDebugEnabled()) {
 			log.debug("< getPageOfMessages()");

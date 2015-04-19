@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class HashTag implements Comparable<HashTag> {
 	private final String id;
-	private final String loopItemId;
+	private final String messageId;
 	private final String tag;
 	private final String tagName;
 	private final Long longValue;
@@ -22,7 +22,7 @@ public final class HashTag implements Comparable<HashTag> {
 	@JsonCreator
 	public HashTag(
 			@JsonProperty("id") String id, 
-			@JsonProperty("loopItemId") String loopItemId, 
+			@JsonProperty("messageId") String messageId, 
 			@JsonProperty("tag") String tag, 
 			@JsonProperty("tagName") String tagName, 
 			@JsonProperty("longValue") Long longValue,
@@ -37,7 +37,7 @@ public final class HashTag implements Comparable<HashTag> {
 			@JsonProperty("updatedBy") String updatedBy) {
 
 		this.id = id;
-		this.loopItemId = loopItemId;
+		this.messageId = messageId;
 		this.tag = tag;
 		this.tagName = tagName; 
 		this.longValue = longValue;
@@ -56,8 +56,8 @@ public final class HashTag implements Comparable<HashTag> {
 		return id;
 	}
 
-	public String getLoopItemId() {
-		return loopItemId;
+	public String getMessageId() {
+		return messageId;
 	}
 
 	public String getTag() {
@@ -115,7 +115,7 @@ public final class HashTag implements Comparable<HashTag> {
 	
 	public static class Builder {
 		private String id;
-		private String loopItemId;
+		private String messageId;
 		private String tag;
 		private String tagName;
 		private Long longValue;
@@ -130,7 +130,7 @@ public final class HashTag implements Comparable<HashTag> {
 		private Long updatedAt;
 		
 		public Builder id(String val) 					{ this.id = val; return this;}
-		public Builder loopItemId(String val) 			{ this.loopItemId = val; return this;}
+		public Builder messageId(String val) 			{ this.messageId = val; return this;}
 		public Builder tag(String val) 					{ this.tag = val; return this;}
 		public Builder tagName(String val) 				{ this.tagName = val; return this;}
 		public Builder longValue(Long val) 				{ this.longValue = val; return this;}
@@ -151,7 +151,7 @@ public final class HashTag implements Comparable<HashTag> {
 	
 	protected HashTag(Builder b) {
 		this.id = b.id;
-		this.loopItemId = b.loopItemId;
+		this.messageId = b.messageId;
 		this.tag = b.tag;
 		this.tagName = b.tagName;
 		this.longValue = b.longValue;

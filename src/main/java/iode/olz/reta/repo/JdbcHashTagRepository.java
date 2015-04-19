@@ -21,15 +21,15 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class JdbcHashTagRepository extends AbstractJdbcRepository implements HashTagRepository {
-	private static final String HASHTAG_SELECT_SQL = "SELECT id, loopItemId, tag, tagName, longValue, doubleValue, textValue, color, hashTagType, valueType, createdAt, createdBy, updatedAt, updatedBy FROM hashTags ";
+	private static final String HASHTAG_SELECT_SQL = "SELECT id, messageId, tag, tagName, longValue, doubleValue, textValue, color, hashTagType, valueType, createdAt, createdBy, updatedAt, updatedBy FROM hashTags ";
 	//private final Logger log = Logger.getLogger(JdbcHashTagRepository.class);
 
 	@Override
-	public List<HashTag> getHashTags(String loopItemId) {
+	public List<HashTag> getHashTags(String messageId) {
 
 		List<HashTag> hashTags = jdbcTemplate.query(
-				HASHTAG_SELECT_SQL + " WHERE loopItemId = UUID(?)",
-				new Object[] {loopItemId},
+				HASHTAG_SELECT_SQL + " WHERE messageId = UUID(?)",
+				new Object[] {messageId},
 				new DefaultHashTagRowMapper());
 		return hashTags;
 	}
@@ -55,14 +55,14 @@ public class JdbcHashTagRepository extends AbstractJdbcRepository implements Has
 				new PreparedStatementCreator() {
 					public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 						PreparedStatement ps = connection.prepareStatement(
-								"INSERT INTO hashTags (id, loopItemId, tag, tagName, longValue, doubleValue, textValue, color, hashTagType, valueType, createdAt, updatedAt, createdBy, updatedBy) "
+								"INSERT INTO hashTags (id, messageId, tag, tagName, longValue, doubleValue, textValue, color, hashTagType, valueType, createdAt, updatedAt, createdBy, updatedBy) "
 										+ "VALUES (UUID(?),UUID(?),?,?,?,?,?,?,?,?,?,?,?,?)");
 						if(id[0] == null) {
 							id[0] = UUID.randomUUID().toString();
 						}
 						int idx = 0;
 						ps.setString(++idx, id[0]);
-						ps.setString(++idx, hashTag.getLoopItemId());
+						ps.setString(++idx, hashTag.getMessageId());
 						ps.setString(++idx, hashTag.getTag());
 						ps.setString(++idx, hashTag.getTagName());
 						setLong(++idx, hashTag.getLongValue(), Types.BIGINT, ps);
@@ -86,11 +86,11 @@ public class JdbcHashTagRepository extends AbstractJdbcRepository implements Has
 	@Override
 	public HashTag updateHashTag(final HashTag hashTag) {
 		this.jdbcTemplate.update(
-				"UPDATE hashTag SET loopItemId = UUID(?), tag = ?, tagName = ?, longValue = ?, doubleValue = ?, textValue = ?, color = ?, hashTagType = ?, valueType = ?, updatedBy = ?, updatedAt = ? WHERE id = UUID(?)", new PreparedStatementSetter() {			
+				"UPDATE hashTag SET messageId = UUID(?), tag = ?, tagName = ?, longValue = ?, doubleValue = ?, textValue = ?, color = ?, hashTagType = ?, valueType = ?, updatedBy = ?, updatedAt = ? WHERE id = UUID(?)", new PreparedStatementSetter() {			
 					public void setValues(PreparedStatement ps) throws SQLException {
 						int idx = 0;
 						Timestamp now = toTimestamp(new Date());
-						ps.setString(++idx, hashTag.getLoopItemId());
+						ps.setString(++idx, hashTag.getMessageId());
 						ps.setString(++idx, hashTag.getTag());
 						ps.setString(++idx, hashTag.getTagName());
 						setLong(++idx, hashTag.getLongValue(), Types.BIGINT, ps);
@@ -113,15 +113,15 @@ public class JdbcHashTagRepository extends AbstractJdbcRepository implements Has
 	}
 
 	@Override
-	public void deleteLoopHashTags(String loopItemId) {
-		jdbcTemplate.update("delete from hashTag where loopItemId = UUID(?)", new Object[] {loopItemId});		
+	public void deleteLoopHashTags(String messageId) {
+		jdbcTemplate.update("delete from hashTag where messageId = UUID(?)", new Object[] {messageId});		
 	}
 
 	public class DefaultHashTagRowMapper implements RowMapper<HashTag> {
 		public HashTag mapRow(ResultSet rs, int rowNum) throws SQLException {
 			return new HashTag(
 					rs.getString("id"),
-					rs.getString("loopItemId"),
+					rs.getString("messageId"),
 					rs.getString("tag"),
 					rs.getString("tagName"),
 					rs.getLong("longValue"),
@@ -139,8 +139,8 @@ public class JdbcHashTagRepository extends AbstractJdbcRepository implements Has
 
 	@Override
 	public boolean tagExists(HashTag hashTag) {
-		return jdbcTemplate.queryForObject("select count(*) from hashTag WHERE loopItemId = UUID(?) AND tag ILIKE ?", 
-				new Object[] {hashTag.getLoopItemId(), hashTag.getTag()}, Integer.class) > 0;
+		return jdbcTemplate.queryForObject("select count(*) from hashTag WHERE messageId = UUID(?) AND tag ILIKE ?", 
+				new Object[] {hashTag.getMessageId(), hashTag.getTag()}, Integer.class) > 0;
 	}
 
 	@Override

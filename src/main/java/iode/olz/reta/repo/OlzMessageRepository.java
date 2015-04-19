@@ -7,6 +7,8 @@ import iode.olz.reta.dao.OlzMessage;
 
 public interface OlzMessageRepository {
 	List<OlzMessage> getPageOfMessages(Date fromDate);
+	List<OlzMessage> getPageOfMessagesWithFilter(Date fromDate, String query);
 	OlzMessage getMessage(String id);
-	OlzMessage createMessage(OlzMessage message);	
+	OlzMessage createMessage(OlzMessage message);
+	boolean filterMessage(OlzMessage message);	
 }
