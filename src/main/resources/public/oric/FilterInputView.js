@@ -17,6 +17,10 @@ module.exports = Backbone.View.extend({
 		
 	},
 	
+	setFilter: function(value) {
+		this.$("#filter-input").val(value);
+	},
+	
 	render: function() {
 		this.$el.html(this.template());
 		return this.el;
@@ -25,10 +29,7 @@ module.exports = Backbone.View.extend({
 	onInput: function(ev) {
 		if(ev.keyCode == 13) {
 			var content = this.$("#filter-input").val();
-			if(content.length > 0) {
-				this.$("#filter-input").val("");
-				this.trigger("enter-pressed", content);
-			}
+			this.trigger("enter-pressed", content);
 		}
 	}
 	

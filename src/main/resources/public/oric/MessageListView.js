@@ -14,6 +14,7 @@ module.exports = Backbone.View.extend({
 		this.collection = options.collection;
 		this.listenTo(this.collection, 'add', this.addMessageView);
 		this.listenTo(this.collection, 'reset', this.addMessageViews);
+		this.messageViews = [];
 	},
 	
 	render: function() {		
@@ -31,6 +32,7 @@ module.exports = Backbone.View.extend({
 	addMessageView: function(messageModel) {
 		var view = this.createMessageView(messageModel);
 		this.$("#message-list").append(view.render());
+		this.messageViews.push(view);
 		return view;
 	},
 	
@@ -42,5 +44,11 @@ module.exports = Backbone.View.extend({
 			break;
 		}
 		return view;
-	}
+	},
+	
+	clear: function() {
+		_.each(this.messageViews, function(view) {
+			view.remove();
+		});		
+	},
 });

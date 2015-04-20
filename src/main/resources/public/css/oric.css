@@ -16,6 +16,14 @@ body {
   padding:10px;  
 }
 
+#hidden-message-alert {
+  position: fixed;
+  bottom: 40px;
+  left: 10px;  
+  padding: 5px;
+  margin:10px;
+  font-size:12px;
+}
 
 #quick-add-input {
   position: fixed;
@@ -32,4 +40,8 @@ body {
 
 #message-list-welcome-banner {
 	margin-top:300px;
+}
+
+#reveal-link {
+	cursor:pointer;
 }

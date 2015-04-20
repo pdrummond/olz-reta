@@ -11,19 +11,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class MainController {
+public class HomeController {
 	//private final Logger log = Logger.getLogger(HomeController.class);
 	
 	@RequestMapping(value="/", method = GET)
 	public String root(Principal principal) {
 		if(principal != null) {
-			return "redirect:loops";
+			return "redirect:home";
 		} else {
 			return "redirect:welcome";
 		}
 	}
 	
-	@RequestMapping(value="loops/**", method=GET)
+	@RequestMapping(value="home/**", method=GET)
 	public String getOricApp(Model model) {
 		return "oric";
 	}
