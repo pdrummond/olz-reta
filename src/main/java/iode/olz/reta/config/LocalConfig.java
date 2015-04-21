@@ -8,9 +8,11 @@ import javax.sql.DataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
-public class DbConfig {
+@Profile("dev")
+public class LocalConfig {
 
 	@Bean
 	public DataSource dataSource() {
