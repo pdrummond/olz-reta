@@ -16,7 +16,7 @@ public abstract class AbstractJdbcRepository {
 
 	protected JdbcTemplate jdbcTemplate;
 
-    @Autowired(required = false)
+    @Autowired
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
