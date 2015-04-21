@@ -66,28 +66,28 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 
 	@Override
 	public OlzMessage getMessage(String id) {
-		List<OlzMessage> loops = jdbcTemplate.query(
+		List<OlzMessage> messages = jdbcTemplate.query(
 				MESSAGE_SELECT_SQL + " WHERE id = UUID(?)",
 				new Object[]{id},
 				new DefaultOlzMessageRowMapper());
-		if(loops.size() == 1) {
-			return loops.get(0);
+		if(messages.size() == 1) {
+			return messages.get(0);
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public OlzMessage createMessage(final OlzMessage loopItem) {
+	public OlzMessage createMessage(final OlzMessage message) {
 		if(log.isDebugEnabled()) {
-			log.debug("> createMessage(" + loopItem + ")");
+			log.debug("> createMessage(" + message + ")");
 		}
-		final String id[] = {loopItem.getId()};
+		final String id[] = {message.getId()};
 		jdbcTemplate.update(
 				new PreparedStatementCreator() {
 					public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 						PreparedStatement ps = connection.prepareStatement(CREATE_MESSAGE_SQL);
-						id[0] = createOlzMessagePs(loopItem, ps);
+						id[0] = createOlzMessagePs(message, ps);
 						return ps;
 					}
 				});	

@@ -6,8 +6,8 @@ var MessageModel = require('./MessageModel');
 module.exports = Backbone.Collection.extend({
 	model: MessageModel,
 
-	comparator : function(loopItem) {
-		return loopItem.get('createdAt');
+	comparator : function(message) {
+		return message.get('createdAt');
 	},
 
 	url: function() {
