@@ -1,0 +1,3 @@
+heroku pgbackups:capture --app olz-reta-test
+curl -o latest.dump `heroku pgbackups:url --app olz-reta-test`
+pg_restore --verbose --clean --no-acl --no-owner -h localhost -U pdrummond -d olz-reta latest.dump
