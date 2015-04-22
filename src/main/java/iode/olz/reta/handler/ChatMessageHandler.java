@@ -14,6 +14,7 @@ import iode.olz.reta.service.TagParserService;
 import java.security.Principal;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
@@ -46,9 +47,16 @@ public class ChatMessageHandler extends AbstractMessageHandler {
 
 	private OlzMessage fillMessage(OlzMessage message, Principal principal) {
 		UserTag curUserTag = getUserTagFromPrincipal(principal);
+		
+		String query = FilterMessageHandler.filterQuery;
+		String content = message.getContent();
+		if(!StringUtils.isEmpty(query) && content.indexOf(query) == -1 ) {			
+			content = content + " " + FilterMessageHandler.filterQuery;
+		}
 		return new OlzMessage.Builder(message)
 				.id(message.getId()==null?UUID.randomUUID().toString():message.getId())
 				.messageType(OlzMessageType.CHAT_MESSAGE)
+				.content(content)
 				.createdBy(curUserTag)
 				.updatedBy(curUserTag)
 				.build();

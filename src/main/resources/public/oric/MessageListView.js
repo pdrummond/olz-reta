@@ -25,13 +25,17 @@ module.exports = Backbone.View.extend({
 	addMessageViews: function(messages) {
 		var self = this;
 		_.each(messages.models, function(messageModel) {
-			self.addMessageView(messageModel);
+			self.addMessageView(messageModel, {addToBottom:true});
 		});
 	},
 	
-	addMessageView: function(messageModel) {
+	addMessageView: function(messageModel, opts) {
 		var view = this.createMessageView(messageModel);
-		this.$("#message-list").prepend(view.render());
+		if(opts && opts.addToBottom) {
+			this.$("#message-list").append(view.render());
+		} else {
+			this.$("#message-list").prepend(view.render());
+		}
 		this.messageViews.push(view);
 		return view;
 	},
