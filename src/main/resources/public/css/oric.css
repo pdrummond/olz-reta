@@ -59,6 +59,7 @@ body {
 }
 
 #message-list li {
+	cursor:pointer;
 	list-style-type: none;
 	padding:2px;
 }
