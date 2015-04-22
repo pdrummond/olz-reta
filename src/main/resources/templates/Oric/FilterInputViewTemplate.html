@@ -1,8 +1,51 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<div id="template">
+<div id="template">	
+<!-- Single button -->
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle btn-success" data-toggle="dropdown" aria-expanded="false">
+    <i class='fa fa-home'></i> /HOME <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="#">/OpenLoopz</a></li>
+    <li><a href="#">/BestSupply</a></li>
+    <li><a href="#">/My Journal</a></li>
+    <li class="divider"></li>
+    <li><a href="#">Home</a></li>
+  </ul>
+</div>
+<div class="btn-group" role="group" aria-label="...">
+  <button type="button" class="btn btn-default active">All</button>
+  <button type="button" class="btn btn-default">Messages</button>
+  <button type="button" class="btn btn-default">Tasks</button>
+  <button type="button" class="btn btn-default">Documents</button>
 
-	<input id="filter-input" placeholder="Type a #hashtag to filter content"/>
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+      More...
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li><a href="#">Dropdown link</a></li>
+      <li><a href="#">Dropdown link</a></li>
+    </ul>
+  </div>
+</div>
+    
+    <div id="filter-input-group" class="input-group">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Filters <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">Your messages</a></li>
+              <li><a href="#">Everything assigned to you</a></li>
+              <li><a href="#">Everything you are mentioned in</a></li>
+              <li class="divider"></li>
+              <li><a href="#">Clear filter</a></li>
+            </ul>
+          </div><!-- /btn-group -->
+          <input type="text" class="form-control"  id="filter-input" aria-label="Type a #hashtag to filter content"/>         
+        </div>
+
     
 </div>
 </html>

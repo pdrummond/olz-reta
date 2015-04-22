@@ -7,7 +7,7 @@ module.exports = Backbone.Collection.extend({
 	model: MessageModel,
 
 	comparator : function(message) {
-		return message.get('createdAt');
+		return -message.get('createdAt');
 	},
 
 	url: function() {

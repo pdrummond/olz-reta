@@ -133,7 +133,7 @@ module.exports = Backbone.View.extend({
     },
     
     scrollBottom: function() {
-    	window.scrollTo(0,document.body.scrollHeight);
+    	//window.scrollTo(0,document.body.scrollHeight);
     },
     
     onLogout: function() {

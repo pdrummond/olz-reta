@@ -7,13 +7,25 @@ body {
 	padding-bottom: 50px;
 }
 
-#filter-input {
+#filter-input-view-container {
+	background:white;
+	border-top:1px solid lightgray;
+	border-bottom:1px solid lightgray;
   position: fixed;
   z-index:9999;
-  top: 60px;
+  top: 0px;
   left: 0;  
   width: 100%;  
   padding:10px;  
+}
+
+#filter-input-group {
+	padding-top:10px;
+	padding-bottom:10px;
+}
+
+#filter-input-view {
+	width:100%;
 }
 
 #hidden-message-alert {
@@ -25,12 +37,25 @@ body {
   font-size:12px;
 }
 
-#quick-add-input {
-  position: fixed;
-  bottom: 0;
+#quick-add-input-view-container {
+  position: relative;
+  top: 50px;
   left: 0;
   width: 100%;  
   padding: 10px;
+  min-height:60px;
+}
+
+
+#quick-add-input {
+	border:none;	
+	width:100%;
+	height:100%;
+}
+
+
+#message-list-view-container {
+	margin-top:70px;
 }
 
 #message-list li {
@@ -38,10 +63,11 @@ body {
 	padding:2px;
 }
 
-#message-list-welcome-banner {
-	margin-top:300px;
-}
-
 #reveal-link {
 	cursor:pointer;
+}
+
+*:focus {	
+	outline:none;
+	outline:0;	
 }
