@@ -3,8 +3,28 @@ body {
 }
 
 #app-container {
+	position:relative;
 	padding-top: 80px;
 	padding-bottom: 50px;
+	transition: all 0.2s ease-in-out;
+	left:0%;
+}
+
+#left-sidebar {
+	position:fixed;
+	width:50%;
+	top:130px;
+	height:100%;	
+	z-index:9999;
+	left:-60%;
+	transition: all 0.2s ease-in-out;
+}
+
+#left-sidebar-view-container {
+	margin-left:10px;
+	margin-right:10px;	
+	width:100%;
+	height:85%;
 }
 
 #filter-input-view-container {
@@ -71,4 +91,10 @@ body {
 *:focus {	
 	outline:none;
 	outline:0;	
+}
+
+.btn-borderless {
+	color: lightgray;
+	background: none;
+	border: none;
 }

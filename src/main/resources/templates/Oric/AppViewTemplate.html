@@ -2,14 +2,44 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <div id="template">   
+  <div id="left-sidebar" clas="container-fluid">
+  	<div id="left-sidebar-view-container" class="panel panel-default">
+  		
+  		<div id="left-sidebar-message-view-container" class="panel panel-default" style="margin:10px;padding:20px">
+  			This is a message	
+  		</div>
+  		<div id="left-sidebar-hashtag-button-container" class="panel panel-default" style="margin:10px;padding:20px">
+  		<div class="btn-group">
+	  <button type="button" class="btn btn-danger"><i class="fa fa-square-o"></i> #status: <b>open</b></button>
+	  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+	    <span class="caret"></span>
+	    <span class="sr-only">Toggle Dropdown</span>
+	  </button>
+	  </div>
+	  <ul class="dropdown-menu" role="menu">
+	    <li><a href="#">Action</a></li>
+	    <li><a href="#">Another action</a></li>
+	    <li><a href="#">Something else here</a></li>
+	    <li class="divider"></li>
+	    <li><a href="#">Separated link</a></li>
+	  </ul>
+	</div>  		
+  		<ul class="nav nav-tabs" style="margin-left:10px;margin-right:10px">
+  			<li role="presentation" class="active"><a href="#">Comments</a></li>
+  			<li role="presentation"><a href="#">Related Items</a></li>
+  			<li role="presentation"><a href="#">Activity</a></li>
+		</ul>
+				
+  		
+  	</div>  	
+	
+  </div>
   <div id="app-container" class="container-fluid">
 	  	<div id="filter-input-view-container"></div>
 		<div id="quick-add-input-view-container" class="panel panel-default"></div>	   
 		<div id="message-list-view-container"></div>
 		<div id="hidden-alert-view-container"></div>
   </div>
-  
-
 </div>
 
 </html>
