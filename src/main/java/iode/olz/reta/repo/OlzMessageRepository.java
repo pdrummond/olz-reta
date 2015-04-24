@@ -10,5 +10,6 @@ public interface OlzMessageRepository {
 	List<OlzMessage> getPageOfMessagesWithFilter(Date fromDate, String query);
 	OlzMessage getMessage(String id);
 	OlzMessage createMessage(OlzMessage message);
-	boolean filterMessage(OlzMessage message);	
+	boolean filterMessage(OlzMessage message);
+	OlzMessage updateMessage(OlzMessage message);	
 }

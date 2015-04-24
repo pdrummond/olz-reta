@@ -44,6 +44,7 @@ module.exports = Backbone.View.extend({
 			this.$("#message-detail-edit-button").html("Edit");
 			var content = this.$("#message-detail-content").text().trim();
 			this.model.set('content', content);
+			this.trigger("message-content-updated", this.model);
 		} else {
 			this.$("#message-detail-content").attr("contenteditable", "true");
 			this.$("#message-detail-content").focus();

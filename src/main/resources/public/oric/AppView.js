@@ -34,6 +34,7 @@ module.exports = Backbone.View.extend({
 		this.listenTo(this.quickAddInputView, 'enter-pressed', this.onQuickAddInputViewEnterPressed);
 		this.listenTo(this.hiddenAlertView, 'reveal-link-clicked', this.onRevealLinkClicked);
 		this.listenTo(this.messageListView, 'message-clicked', this.onMessageClicked);
+		this.listenTo(this.messageDetailView, 'message-content-updated', this.onMessageContentUpdated);
 		
 		var self = this;
 		this.webSocketConnect(function() {
@@ -106,6 +107,10 @@ module.exports = Backbone.View.extend({
 		this.onChatMessage(message);
 	},
 	
+	onMessageContentUpdated: function(message) {
+		this.sendMessage("message-content-updated", message);
+	},
+	
 	onChatMessage: function(message) {
 		this.sendMessage("chat-message", message);		
 	},
@@ -172,5 +177,5 @@ module.exports = Backbone.View.extend({
 	slideOut: function(el) {
 		$("#app-container").animate({left: '0%'}, 100);
 		$(el).animate({left: '-60%'}, 100);
-	}
+	},
 });

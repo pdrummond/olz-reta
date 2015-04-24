@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +25,7 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 	private final Logger log = Logger.getLogger(JdbcMessageRepository.class);
 	private static final String MESSAGE_SELECT_SQL = "SELECT m.id, m.messageType, m.content, m.archived, m.createdAt, m.createdBy, m.updatedAt, m.updatedBy FROM messages m";
 	private static final String CREATE_MESSAGE_SQL = "INSERT INTO messages (id, messageType, content, archived, createdAt, updatedAt, createdBy, updatedBy) values(UUID(?),?,?,?,?,?,?,?)";
+	private static final String UPDATE_MESSAGE_SQL = "UPDATE messages set content = ?, updatedAt = ?, updatedBy = ? where id = UUID(?)"; 
 	private static final String MESSAGE_ORDER_SQL = " ORDER BY createdAt DESC";
 	private static final String MESSAGE_LIMIT = "50";
 	
@@ -96,6 +98,27 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 		}
 		return getMessage(id[0]);
 	}
+	
+	@Override
+	public OlzMessage updateMessage(final OlzMessage message) {
+		if(log.isDebugEnabled()) {
+			log.debug("> updateMessage(" + message + ")");
+		}
+		this.jdbcTemplate.update(UPDATE_MESSAGE_SQL, new PreparedStatementSetter() {			
+			public void setValues(PreparedStatement ps) throws SQLException {
+				int idx = 0;
+				ps.setString(++idx, message.getContent());
+				ps.setTimestamp(++idx, toTimestamp(message.getUpdatedAt()));
+				ps.setString(++idx, message.getUpdatedBy().getTag());
+				ps.setString(++idx, message.getId());
+			}
+		});
+		if(log.isDebugEnabled()) {
+			log.debug("< updateMessage()");
+		}
+		return message;
+	}
+
 
 	private String createOlzMessagePs(OlzMessage message, PreparedStatement ps) throws SQLException {		
 		String id = message.getId();
