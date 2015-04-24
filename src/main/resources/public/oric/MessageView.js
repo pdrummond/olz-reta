@@ -18,6 +18,7 @@ module.exports = Backbone.View.extend({
 	
 	initialize: function(options) {
 		this.message = options.message;
+		this.listenTo(this.model, 'change', this.render);
 	},
 		
 	render: function() {		

@@ -27,6 +27,10 @@ body {
 	height:85%;
 }
 
+#message-detail-content[contenteditable='true'] {
+	background: #F2F5C6;
+}
+
 #filter-input-view-container {
 	background:white;
 	border-top:1px solid lightgray;

@@ -9,6 +9,10 @@ module.exports = Backbone.View.extend({
 	id:"MessageDetailView",	
 	template: _.template($('#MessageDetailViewTemplate').html()),
 	
+	events: {
+		'click #message-detail-edit-button': 'onEditButtonClicked'
+	},
+	
 	initialize: function() {
 	},
 	
@@ -31,5 +35,21 @@ module.exports = Backbone.View.extend({
 		} else {
 			return this.model.get('id');
 		}
+	},
+	
+	onEditButtonClicked: function() {
+		if(this.isEditing) {
+			this.isEditing = false;
+			this.$("#message-detail-content").attr("contenteditable", "false");
+			this.$("#message-detail-edit-button").html("Edit");
+			var content = this.$("#message-detail-content").text().trim();
+			this.model.set('content', content);
+		} else {
+			this.$("#message-detail-content").attr("contenteditable", "true");
+			this.$("#message-detail-content").focus();
+			this.$("#message-detail-edit-button").html("Save");
+			this.isEditing = true;
+		}
+				
 	}
 });
