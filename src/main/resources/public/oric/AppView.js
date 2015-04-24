@@ -11,6 +11,7 @@ var FilterInputView = require('./FilterInputView');
 var MessageListView = require('./MessageListView');
 var QuickAddInputView = require('./QuickAddInputView');
 var HiddenAlertView = require('./HiddenAlertView');
+var MessageDetailView = require("./MessageDetailView");
 
 module.exports = Backbone.View.extend({
 	
@@ -27,10 +28,12 @@ module.exports = Backbone.View.extend({
 		this.messageListView = new MessageListView({collection: this.messageCollection});
 		this.quickAddInputView = new QuickAddInputView();
 		this.hiddenAlertView = new HiddenAlertView();
+		this.messageDetailView = new MessageDetailView();
 		
 		this.listenTo(this.filterInputView, 'enter-pressed', this.onFilterInputViewEnterPressed);
 		this.listenTo(this.quickAddInputView, 'enter-pressed', this.onQuickAddInputViewEnterPressed);
 		this.listenTo(this.hiddenAlertView, 'reveal-link-clicked', this.onRevealLinkClicked);
+		this.listenTo(this.messageListView, 'message-clicked', this.onMessageClicked);
 		
 		var self = this;
 		this.webSocketConnect(function() {
@@ -59,7 +62,8 @@ module.exports = Backbone.View.extend({
 		this.$("#filter-input-view-container").html(this.filterInputView.render());		
 		this.$("#message-list-view-container").html(this.messageListView.render());
 		this.$("#quick-add-input-view-container").html(this.quickAddInputView.render());		
-		this.$("#hidden-alert-view-container").html(this.hiddenAlertView.render());		
+		this.$("#hidden-alert-view-container").html(this.hiddenAlertView.render());
+		this.$("#message-detail-view-container").html(this.messageDetailView.render());
 	},
 	
 	webSocketConnect: function(callback) {
@@ -146,5 +150,27 @@ module.exports = Backbone.View.extend({
 	
 	onRevealLinkClicked: function() {
 		this.clearFilter();
+	},
+	
+	onMessageClicked: function(messageView) {
+		$("#MessageView a").removeClass('active');
+		messageView.select();
+		
+		if(this.messageDetailView.getMessageId() == messageView.getMessageId()) {
+			this.slideOut("#message-detail-view-container");
+		} else {		
+			this.messageDetailView.setModel(messageView.model);
+			this.slideIn("#message-detail-view-container");		
+		}
+	},
+	
+	slideIn: function(el) {
+		$("#app-container").animate({left: '40%'}, 100);
+		$(el).animate({left: '0%'}, 100);
+	},
+	
+	slideOut: function(el) {
+		$("#app-container").animate({left: '0%'}, 100);
+		$(el).animate({left: '-60%'}, 100);
 	}
 });

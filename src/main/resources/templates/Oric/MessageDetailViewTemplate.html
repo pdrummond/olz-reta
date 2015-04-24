@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div id="template">
+
+	<div id="message-detail-view-panel" class="panel panel-default">
+  		
+  		<div id="message-detail-content" class="panel panel-default" style="margin:10px;padding:20px">
+  			{{content}}
+  		</div>
+  		<div id="left-sidebar-hashtag-button-container" class="panel panel-default" style="margin:10px;padding:20px">
+  		
+  		<div class="btn-group">
+			  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+			    <i class="fa fa-square-o"></i> #status: <b>open</b> <span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu">
+			    <li><a href="#">Change to #status: <b>closed</b></a></li>
+			  </ul>
+			</div>
+	  <ul class="dropdown-menu" role="menu">
+	    <li><a href="#">Action</a></li>
+	    <li><a href="#">Another action</a></li>
+	    <li><a href="#">Something else here</a></li>
+	    <li class="divider"></li>
+	    <li><a href="#">Separated link</a></li>
+	  </ul>
+	</div>  		
+  		<ul class="nav nav-tabs" style="margin-left:10px;margin-right:10px">
+  			<li role="presentation" class="active"><a href="#">Comments</a></li>
+  			<li role="presentation"><a href="#">Related Items</a></li>
+  			<li role="presentation"><a href="#">Activity</a></li>
+		</ul>
+				
+  		
+  	</div>  	
+	
+  </div>
+    
+</html>

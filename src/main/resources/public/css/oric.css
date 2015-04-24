@@ -10,9 +10,9 @@ body {
 	left:0%;
 }
 
-#left-sidebar {
+.left-sidebar-view {
 	position:fixed;
-	width:50%;
+	width:40%;
 	top:130px;
 	height:100%;	
 	z-index:9999;
@@ -20,7 +20,7 @@ body {
 	transition: all 0.2s ease-in-out;
 }
 
-#left-sidebar-view-container {
+#message-detail-view-panel {
 	margin-left:10px;
 	margin-right:10px;	
 	width:100%;
@@ -88,13 +88,13 @@ body {
 	cursor:pointer;
 }
 
-*:focus {	
-	outline:none;
-	outline:0;	
-}
 
 .btn-borderless {
 	color: gray;
 	background: none;
 	border: none;
+}
+
+* {
+    outline: none !important;    
 }

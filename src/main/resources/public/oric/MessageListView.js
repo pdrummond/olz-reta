@@ -13,7 +13,7 @@ module.exports = Backbone.View.extend({
 	initialize: function(options) {
 		this.collection = options.collection;
 		this.listenTo(this.collection, 'add', this.addMessageView);
-		this.listenTo(this.collection, 'reset', this.addMessageViews);
+		this.listenTo(this.collection, 'reset', this.addMessageViews);		
 		this.messageViews = [];
 	},
 	
@@ -45,9 +45,15 @@ module.exports = Backbone.View.extend({
 		switch(model.get('messageType')) {
 		case "CHAT_MESSAGE":
 			view = new MessageView({model: model});
+			this.listenTo(view, 'message-clicked', this.onMessageClicked);
 			break;
 		}
+		
 		return view;
+	},
+	
+	onMessageClicked: function(messageView) {
+		this.trigger("message-clicked", messageView);
 	},
 	
 	clear: function() {
