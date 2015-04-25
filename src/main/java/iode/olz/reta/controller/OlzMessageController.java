@@ -37,7 +37,7 @@ public class OlzMessageController {
 		
 		List<OlzMessage> messages = 
 				StringUtils.isEmpty(FilterMessageHandler.filterQuery) 
-				? messageRepo.getPageOfMessages(fromDate) 
+				? messageRepo.getChannels(fromDate) 
 				: messageRepo.getPageOfMessagesWithFilter(fromDate, FilterMessageHandler.filterQuery);
 
 		if(log.isDebugEnabled()) {

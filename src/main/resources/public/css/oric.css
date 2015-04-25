@@ -102,3 +102,7 @@ body {
 * {
     outline: none !important;    
 }
+
+.modal-dialog {
+  margin-top: 200px !important;
+}

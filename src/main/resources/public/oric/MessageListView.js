@@ -4,6 +4,7 @@ var _ = require('underscore');
 var $ = require('jquery');
 var Backbone = require('backbone');
 
+var ChannelView = require("./ChannelView");
 var MessageView = require("./MessageView");
 
 module.exports = Backbone.View.extend({
@@ -45,6 +46,10 @@ module.exports = Backbone.View.extend({
 		switch(model.get('messageType')) {
 		case "CHAT_MESSAGE":
 			view = new MessageView({model: model});
+			this.listenTo(view, 'message-clicked', this.onMessageClicked);
+			break;
+		case "CHANNEL":
+			view = new ChannelView({model: model});
 			this.listenTo(view, 'message-clicked', this.onMessageClicked);
 			break;
 		}

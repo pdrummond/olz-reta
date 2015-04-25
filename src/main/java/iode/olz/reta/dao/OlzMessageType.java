@@ -3,7 +3,8 @@ package iode.olz.reta.dao;
 public enum OlzMessageType {
 	MESSAGE(1),
 	CHAT_MESSAGE(2),
-	MESSAGE_CONTENT_UPDATED(3); 
+	MESSAGE_CONTENT_UPDATED(3), 
+	CHANNEL(4); 
 	
 	private int typeId;
 

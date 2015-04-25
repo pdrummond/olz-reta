@@ -1,8 +1,22 @@
 CREATE EXTENSION "uuid-ossp";
 
+CREATE TABLE channels (
+	id UUID NOT NULL DEFAULT uuid_generate_v4(),
+	messageId UUID, 
+	title TEXT,
+	content TEXT,
+	channelType INTEGER NOT NULL DEFAULT 1,		
+	createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+	updatedAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+	createdBy TEXT, 
+	updatedBy TEXT,	
+	CONSTRAINT channelPk PRIMARY KEY (id)
+);
+
 CREATE TABLE messages (
 	id UUID NOT NULL DEFAULT uuid_generate_v4(),
 	messageType INTEGER NOT NULL DEFAULT 1,
+	title TEXT,
 	content TEXT,
 	archived BOOLEAN NOT NULL DEFAULT false,
 	createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
