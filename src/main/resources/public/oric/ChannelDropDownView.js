@@ -14,7 +14,8 @@ module.exports = OlzBaseView.extend({
 	template: _.template($('#ChannelDropDownViewTemplate').html()),
 	
 	events: {
-		'click #create-channel-menu-item': 'onCreateChannelMenuItemClicked',		
+		'click #home-channel-menu-item': 'onHomeChannelMenuItemClicked',
+		'click #create-channel-menu-item': 'onCreateChannelMenuItemClicked'		
 	},
 	
 	initialize: function(options) {
@@ -29,14 +30,20 @@ module.exports = OlzBaseView.extend({
 		this.collection.each(function(model) {
 			self.addChannelMenuItemView(model);
 		});		
-		this.$("#selected-channel-title").html(this.model != null ? this.model.get('title') : "No Channel");
+		this.$("#selected-channel-title").html(this.model != null ? this.model.get('title') : "HOME");
+		$('.dropdown-toggle').dropdown();
 		return this.el;
 	},
 	
 	addChannelMenuItemView(model) {
 		var view = new ChannelMenuItemView({model:model});
+		this.listenTo(view, 'channel-clicked', this.onChannelMenuItemClicked);
 		this.$("#channel-list").append(view.render());
 		this.views.push(view);
+	},
+	
+	onHomeChannelMenuItemClicked: function() {
+		this.trigger('channel-clicked', null);
 	},
 	
 	onCreateChannelMenuItemClicked: function() {
@@ -44,6 +51,12 @@ module.exports = OlzBaseView.extend({
 		this.showPromptDialog('Create Channel', {}, function(channelTitle) {
 			self.trigger('create-channel', channelTitle);
 		});
+	},
+	
+	onChannelMenuItemClicked: function(model) {
+		this.model = model;
+		this.render();
+		this.trigger('channel-clicked', model);
 	},
 
 	getCurrentChannelId: function() {

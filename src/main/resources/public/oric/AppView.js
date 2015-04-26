@@ -40,6 +40,7 @@ module.exports = Backbone.View.extend({
 		this.listenTo(this.messageListView, 'message-clicked', this.onMessageClicked);
 		this.listenTo(this.messageDetailView, 'message-content-updated', this.onMessageContentUpdated);
 		this.listenTo(this.channelDropDownView, 'create-channel', this.onCreateChannel);
+		this.listenTo(this.channelDropDownView, 'channel-clicked', this.onChannelClicked);
 
 		var self = this;
 		this.webSocketConnect(function() {
@@ -61,7 +62,6 @@ module.exports = Backbone.View.extend({
 					reset:true,
 					success:function() {				
 						$("body").show();
-						$('.dropdown-toggle').dropdown();
 					}			
 				});
 			}
@@ -121,13 +121,19 @@ module.exports = Backbone.View.extend({
 	onCreateChannel: function(channelTitle) {
 		this.sendMessage('channel', {title: channelTitle});
 	},
+	
+	onChannelClicked: function(model) {
+		this.curChannelModel = model;
+		this.updateMessagesVisibility();
+	},
 
 	onMessageContentUpdated: function(message) {
 		this.sendMessage("message-content-updated", message);
 	},
 
 	onChatMessage: function(message) {
-		this.sendMessage("chat-message", message);		
+		var channel = this.curChannelModel ? this.curChannelModel.attributes : null;
+		this.sendMessage("chat-message", _.extend(message, {channel: channel}));		
 	},
 
 	onFilterMessage: function(message) {
@@ -143,16 +149,11 @@ module.exports = Backbone.View.extend({
 		console.log("MESSAGE: " + JSON.stringify(message));
 		var messageModel = new Backbone.Model(message);
 		switch(message.messageType) {
-		case "CHAT_MESSAGE": {
+		case "CHAT_MESSAGE": 
+		case "CHANNEL": 
 			var view = this.messageListView.addMessageView(messageModel);
-			this.scrollBottom();
-			break;
-		}
-		case "CHANNEL": {
-			var view = this.messageListView.addMessageView(messageModel);
-			this.scrollBottom();
-			break;
-		}
+			this.updateMessageVisibility(view);
+			break;				
 		default: console.log("MESSAGE RECIEVED: " + message.messageType); break;
 		}
 	},
@@ -198,4 +199,20 @@ module.exports = Backbone.View.extend({
 		$("#app-container").animate({left: '0%'}, 100);
 		$(el).animate({left: '-60%'}, 100);
 	},
+	
+	updateMessagesVisibility: function() {
+		var self = this;
+		_.each(this.messageListView.getViews(), function(view) {
+			self.updateMessageVisibility(view);
+		});
+	},
+
+	updateMessageVisibility: function(view) {		
+		var show = true;
+		var viewChannelId = view.model.get('channel') != null ? view.model.get('channel').id : 0;
+		if(this.curChannelModel != null) {
+			show = viewChannelId == this.curChannelModel.get('id');
+		}
+		view.$el.toggle(show);
+	}
 });

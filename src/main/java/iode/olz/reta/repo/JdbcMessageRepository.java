@@ -1,5 +1,6 @@
 package iode.olz.reta.repo;
 
+import iode.olz.reta.dao.Channel;
 import iode.olz.reta.dao.OlzMessage;
 import iode.olz.reta.dao.OlzMessageType;
 import iode.olz.reta.dao.UserTag;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,11 +25,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JdbcMessageRepository extends AbstractJdbcRepository implements OlzMessageRepository {
 	private final Logger log = Logger.getLogger(JdbcMessageRepository.class);
-	private static final String MESSAGE_SELECT_SQL = "SELECT m.id, m.messageType, m.title, m.content, m.archived, m.createdAt, m.createdBy, m.updatedAt, m.updatedBy FROM messages m";
-	private static final String CREATE_MESSAGE_SQL = "INSERT INTO messages (id, messageType, title, content, archived, createdAt, updatedAt, createdBy, updatedBy) values(UUID(?),?,?,?,?,?,?,?,?)";
-	private static final String UPDATE_MESSAGE_SQL = "UPDATE messages set title = ?, content = ?, updatedAt = ?, updatedBy = ? where id = UUID(?)"; 
+	private static final String MESSAGE_SELECT_SQL = "SELECT m.id, m.messageType, m.title, m.content, m.channelId, m.archived, m.createdAt, m.createdBy, m.updatedAt, m.updatedBy FROM messages m";
+	private static final String CREATE_MESSAGE_SQL = "INSERT INTO messages (id, messageType, title, content, channelId, archived, createdAt, updatedAt, createdBy, updatedBy) values(UUID(?),?,?,?,UUID(?),?,?,?,?,?)";
+	private static final String UPDATE_MESSAGE_SQL = "UPDATE messages set title = ?, content = ?, channelId = UUID(?), updatedAt = ?, updatedBy = ? where id = UUID(?)"; 
 	private static final String MESSAGE_ORDER_SQL = " ORDER BY createdAt DESC";
 	private static final String MESSAGE_LIMIT = "50";
+	
+	@Autowired 
+	ChannelRepository channelRepo;
 	
 	@Override
 	public List<OlzMessage> getChannels(Date fromDate) {
@@ -109,6 +114,7 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 				int idx = 0;
 				ps.setString(++idx, message.getTitle());
 				ps.setString(++idx, message.getContent());
+				ps.setString(++idx, message.getChannel() == null ? null: message.getChannel().getId());
 				ps.setTimestamp(++idx, toTimestamp(message.getUpdatedAt()));
 				ps.setString(++idx, message.getUpdatedBy().getTag());
 				ps.setString(++idx, message.getId());
@@ -132,6 +138,7 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 		ps.setInt(++idx, message.getMessageType().getTypeId());
 		ps.setString(++idx, message.getTitle());
 		ps.setString(++idx, message.getContent());
+		ps.setString(++idx, message.getChannel() == null ? null : message.getChannel().getId());
 		ps.setBoolean(++idx, message.isArchived());
 		ps.setTimestamp(++idx, now);
 		ps.setTimestamp(++idx, now);
@@ -142,11 +149,16 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 
 	public class DefaultOlzMessageRowMapper implements RowMapper<OlzMessage> {
 		public OlzMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
+			
+			String channelId = rs.getString("channelId");
+			Channel channel = channelId == null? null : channelRepo.getChannel(channelId);
+			
 			return new OlzMessage(
 					rs.getString("id"),
 					OlzMessageType.fromTypeId(rs.getInt("messageType")),
 					rs.getString("title"),
 					rs.getString("content"),
+					channel,
 					rs.getBoolean("archived"),
 					toDateLong(rs.getTimestamp("createdAt")),
 					new UserTag(rs.getString("createdBy")),

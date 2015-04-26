@@ -27,6 +27,6 @@ module.exports = Backbone.View.extend({
 	},
 	
 	onClicked: function() {
-		this.trigger("message-clicked", this);
+		this.trigger("channel-clicked", this.model);
 	}	
 });

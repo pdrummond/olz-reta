@@ -11,11 +11,11 @@ module.exports = Backbone.View.extend({
 	id:"MessageListView",	
 	template: _.template($('#MessageListViewTemplate').html()),
 	
-	initialize: function(options) {
+	initialize: function(options) {		
 		this.collection = options.collection;
 		this.listenTo(this.collection, 'add', this.addMessageView);
 		this.listenTo(this.collection, 'reset', this.addMessageViews);		
-		this.messageViews = [];
+		this.views = [];
 	},
 	
 	render: function() {		
@@ -37,7 +37,7 @@ module.exports = Backbone.View.extend({
 		} else {
 			this.$("#message-list").prepend(view.render());
 		}
-		this.messageViews.push(view);
+		this.views.push(view);
 		return view;
 	},
 	
@@ -46,14 +46,12 @@ module.exports = Backbone.View.extend({
 		switch(model.get('messageType')) {
 		case "CHAT_MESSAGE":
 			view = new MessageView({model: model});
-			this.listenTo(view, 'message-clicked', this.onMessageClicked);
 			break;
 		case "CHANNEL":
 			view = new ChannelView({model: model});
-			this.listenTo(view, 'message-clicked', this.onMessageClicked);
 			break;
 		}
-		
+		this.listenTo(view, 'message-clicked', this.onMessageClicked);
 		return view;
 	},
 	
@@ -62,8 +60,12 @@ module.exports = Backbone.View.extend({
 	},
 	
 	clear: function() {
-		_.each(this.messageViews, function(view) {
+		_.each(this.views, function(view) {
 			view.remove();
 		});		
 	},
+	
+	getViews: function() {
+		return this.views;
+	}
 });

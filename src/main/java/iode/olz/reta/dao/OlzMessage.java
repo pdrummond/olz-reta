@@ -11,6 +11,7 @@ public class OlzMessage {
 	private final long updatedAt;
 	private final String title;
 	private final String content;
+	private final Channel channel;
 	private final Boolean archived;
 	
 	public OlzMessage(
@@ -18,6 +19,7 @@ public class OlzMessage {
 			@JsonProperty("itemType") OlzMessageType messageType,
 			@JsonProperty("title") String title,
 			@JsonProperty("content") String content,
+			@JsonProperty("channel") Channel channel,
 			@JsonProperty("archived") Boolean archived,
 			@JsonProperty("createdAt") long createdAt, 
 			@JsonProperty("createdBy") UserTag createdBy,
@@ -27,6 +29,7 @@ public class OlzMessage {
 		this.messageType = messageType;
 		this.title = title;
 		this.content = content;
+		this.channel = channel;
 		this.archived = archived;
 		this.createdAt = createdAt;
 		this.createdBy = createdBy;
@@ -48,6 +51,10 @@ public class OlzMessage {
 	
 	public String getContent() {
 		return content;
+	}
+	
+	public Channel getChannel() {
+		return channel;
 	}
 
 	public Boolean isArchived() {
@@ -75,6 +82,7 @@ public class OlzMessage {
 		private OlzMessageType messageType = OlzMessageType.CHAT_MESSAGE;
 		private String title;
 		private String content;
+		private Channel channel;
 		private Boolean archived;
 		private UserTag createdBy;
 		private long createdAt;
@@ -88,19 +96,21 @@ public class OlzMessage {
 		public Builder(OlzMessage m) {
 			this.id = m.id;
 			this.messageType = m.messageType;
+			this.title = m.title;
+			this.content = m.content;
+			this.channel = m.channel;
+			this.archived = m.archived;
 			this.createdBy = m.createdBy;
 			this.createdAt = m.createdAt;
 			this.updatedBy = m.updatedBy;
 			this.updatedAt = m.updatedAt;
-			this.title = m.title;
-			this.content = m.content;
-			this.archived = m.archived;
 		}
 		
 		public Builder id(String val) 					{ this.id = val; return this;}
 		public Builder messageType(OlzMessageType val) 	{ this.messageType = val; return this;}
 		public Builder title(String val) 				{ this.title = val; return this;}
 		public Builder content(String val) 				{ this.content = val; return this;}
+		public Builder channel(Channel val) 			{ this.channel = val; return this;}
 		public Builder archived(Boolean val)			{ this.archived = val; return this;}
 		public Builder createdBy(UserTag val) 			{ this.createdBy = val; return this;}
 		public Builder updatedBy(UserTag val) 			{ this.updatedBy = val; return this;}
@@ -117,6 +127,7 @@ public class OlzMessage {
 		this.messageType = b.messageType;
 		this.title = b.title;
 		this.content = b.content;
+		this.channel = b.channel;
 		this.archived = b.archived;
 		this.createdBy = b.createdBy;
 		this.updatedBy = b.updatedBy;
