@@ -13,7 +13,7 @@ module.exports = Backbone.View.extend({
 	template: _.template($('#MessageViewTemplate').html()),
 	
 	events: {
-		'click': 'onClicked'
+		'click #show-detail-button': 'onShowDetailButtonClicked'
 	},
 	
 	initialize: function(options) {
@@ -24,11 +24,15 @@ module.exports = Backbone.View.extend({
 	render: function() {		
 		this.$el.html(this.template());
 		this.$("#message-content").html(this.model.get('content'));
-		//this.$("#item-image").html(this.generateUserImage());
+		var channel = this.model.get('channel');
+		if(channel != null) {
+			this.$("#item-channel-title").html(channel.title);
+		}		
+		$('.dropdown-toggle').dropdown();
 		return this.el;
 	},
 	
-	onClicked: function() {
+	onShowDetailButtonClicked: function() {
 		this.trigger("message-clicked", this);
 	},
 
