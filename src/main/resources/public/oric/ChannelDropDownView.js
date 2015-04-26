@@ -43,7 +43,10 @@ module.exports = OlzBaseView.extend({
 	},
 	
 	onHomeChannelMenuItemClicked: function() {
+		this.model = null;
+		this.render();
 		this.trigger('channel-clicked', null);
+		
 	},
 	
 	onCreateChannelMenuItemClicked: function() {

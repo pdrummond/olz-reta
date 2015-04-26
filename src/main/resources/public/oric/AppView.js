@@ -60,7 +60,8 @@ module.exports = Backbone.View.extend({
 			success:function() {
 				self.messageCollection.fetch({
 					reset:true,
-					success:function() {				
+					success:function() {
+						self.updateMessagesVisibility();						
 						$("body").show();
 					}			
 				});

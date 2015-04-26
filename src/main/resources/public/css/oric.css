@@ -82,7 +82,7 @@ body {
 	margin-top:70px;
 }
 
-#message-list li {
+#message-list > li {
 	cursor:pointer;
 	list-style-type: none;
 	padding:2px;
@@ -105,4 +105,19 @@ body {
 
 .modal-dialog {
   margin-top: 200px !important;
+}
+
+.dropdown-header {
+	margin-top:10px;
+}
+
+.user-icon-image {
+	width:15px;
+	border-radius:15px;
+	transition: all 0.2s ease-in-out;
+	z-index:10;	
+}
+
+.user-icon-image:hover {
+	transform: scale(2); 
 }

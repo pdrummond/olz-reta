@@ -8,25 +8,35 @@
 		<button class="btn btn-borderless btn-xs"><i class="fa fa-arrow-up" style="color:#990F0F" title="#priority:3"></i></button>-->
     	<!-- <img id="item-image" src="" style="width:30px"/> -->
     	<!-- <strong style="color:gray"> <span id="message-user-tag">Paul</span>:</strong>-->
-		<!-- <img id="item-image" src="/images/pd.png" style="width:20px;border-radius:5px;margin-right:5px"/>-->
 
-	<button id="show-detail-button" class="btn btn-borderless btn-xs" title="#OLZ-MSG-1"><i class="fa fa-arrow-left"></i></button>
-	<span id="message-item-dropdown" class="dropdown">
-			<button class="btn btn-borderless dropdown-toggle btn-xs" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+	<img id="item-image" class="user-icon-image" src="/images/pd.png"/>
+	<span id="item-type-dropdown" class="dropdown">
+			<button id="item-type-button" class="btn btn-borderless dropdown-toggle btn-xs" type="button" data-toggle="dropdown" aria-expanded="true">
 				<i class="fa fa-comments"></i>
 			</button>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Chat</a></li>
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Task</a></li>
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Project</a></li>
+				<li id="view-details-menu-item" role="presentation"><a role="menuitem" tabindex="-1" href="#">View Details</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Archive</a></li>
+				<li role="presentation" class="dropdown-header">Promote to...</li>
+				<li id="promote-to-task-menu-item" role="presentation"><a role="menuitem" tabindex="-1" href="#">Task</a></li>
 				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Document</a></li>
 			</ul>
 	</span>
-	<!-- <span class="label label-primary">OPEN</span>-->
+	<div id="item-status-dropdown" class="btn-group" style="display:none">
+	  <button type="button" class="btn btn-success btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+	    Open <span class="caret"></span>
+	  </button>
+	  <ul class="dropdown-menu" role="menu">
+	    <li><a href="#">In Progress</a></li>
+	    <li><a href="#">Blocked</a></li>
+	    <li><a href="#">In Test</a></li>
+	    <li><a href="#">Done</a></li>
+	  </ul>
+	</div>
     	<span id="message-content" class="list-group-item-text"></span>
 
 		<span class="pull-right">		
-		<div class="btn-group" role="group" aria-label="...">
+		<div id="item-channel-dropdown" class="btn-group" role="group" aria-label="...">
 						
 			<div class="btn-group" role="group">
 				<button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">
