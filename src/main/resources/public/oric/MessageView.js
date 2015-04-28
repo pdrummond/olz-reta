@@ -32,6 +32,15 @@ module.exports = Backbone.View.extend({
 		}
 		this.$("#item-channel-dropdown").toggle(channel != null);
 		$('.dropdown-toggle').dropdown();
+		if(this.model.get('messageType') == 'TASK') {
+			this.$('.list-group-item').attr('class', 'list-group-item list-group-item-success');
+			this.$("#item-type-button i").attr('class', 'fa fa-tasks');
+			this.$("#item-status-dropdown").css('display', 'inline-block');
+		} else {
+			this.$("#item-type-button i").attr('class', 'fa fa-comments');
+			this.$("#item-status-dropdown").hide();
+		}
+
 		return this.el;
 	},
 	
@@ -40,10 +49,7 @@ module.exports = Backbone.View.extend({
 	},
 	
 	onPromoteToTaskMenuItemClicked: function() {
-		this.$('.list-group-item').addClass('list-group-item-success');
-		this.$("#item-type-button i").attr('class', 'fa fa-tasks');
-		this.$("#item-status-dropdown").show();
-		//this.$("#item-user-icon").attr('src', "https://www.gravatar.com/avatar/" + this.md5(email) + "?d=retro&s=80")
+		this.trigger("promote-to-task-clicked", this);
 	},
 
 	select: function() {		

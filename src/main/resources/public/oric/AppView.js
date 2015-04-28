@@ -38,6 +38,7 @@ module.exports = Backbone.View.extend({
 		this.listenTo(this.quickAddInputView, 'enter-pressed', this.onQuickAddInputViewEnterPressed);
 		this.listenTo(this.hiddenAlertView, 'reveal-link-clicked', this.onRevealLinkClicked);
 		this.listenTo(this.messageListView, 'message-clicked', this.onMessageClicked);
+		this.listenTo(this.messageListView, 'promote-to-task-clicked', this.onPromoteToTaskClicked);
 		this.listenTo(this.messageDetailView, 'message-content-updated', this.onMessageContentUpdated);
 		this.listenTo(this.channelDropDownView, 'create-channel', this.onCreateChannel);
 		this.listenTo(this.channelDropDownView, 'channel-clicked', this.onChannelClicked);
@@ -131,6 +132,13 @@ module.exports = Backbone.View.extend({
 	onMessageContentUpdated: function(message) {
 		this.sendMessage("message-content-updated", message);
 	},
+	
+	onPromoteToTaskClicked: function(messageView) {
+		this.sendMessage("promote-to-task", {
+			messageType: "PROMOTE_TO_TASK",
+			referredMessage: messageView.model.attributes
+		});
+	},
 
 	onChatMessage: function(message) {
 		var channel = this.curChannelModel ? this.curChannelModel.attributes : null;
@@ -150,7 +158,8 @@ module.exports = Backbone.View.extend({
 		console.log("MESSAGE: " + JSON.stringify(message));
 		var messageModel = new Backbone.Model(message);
 		switch(message.messageType) {
-		case "CHAT_MESSAGE": 
+		case "COMMENT": 
+		case "TASK": 
 		case "CHANNEL": 
 			var view = this.messageListView.addMessageView(messageModel);
 			this.updateMessageVisibility(view);

@@ -1,10 +1,14 @@
 package iode.olz.reta.dao;
 
 public enum OlzMessageType {
-	MESSAGE(1),
-	CHAT_MESSAGE(2),
-	MESSAGE_CONTENT_UPDATED(3), 
-	CHANNEL(4); 
+	COMMENT(1),
+	TASK(2),
+	CHANNEL(3),
+	DOCUMENT(4),
+	
+	MESSAGE_CONTENT_UPDATED(20), 
+	PROMOTE_TO_TASK(21); 
+
 	
 	private int typeId;
 
@@ -22,12 +26,12 @@ public enum OlzMessageType {
 				return type;
 			}
 		}
-		return OlzMessageType.MESSAGE;
+		return OlzMessageType.COMMENT;
 	}
 	
 	public static OlzMessageType fromTypeId(int typeId) {
 		OlzMessageType[] types = OlzMessageType.values();
-		OlzMessageType type = OlzMessageType.MESSAGE;
+		OlzMessageType type = OlzMessageType.COMMENT;
 		for (int i=0; i < types.length; i++) {
 			if (types[i].getTypeId() == typeId) {
 				type = types[i];

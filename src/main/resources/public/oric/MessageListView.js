@@ -44,7 +44,8 @@ module.exports = Backbone.View.extend({
 	createMessageView: function(model) {
 		var view;
 		switch(model.get('messageType')) {
-		case "CHAT_MESSAGE":
+		case "COMMENT":
+		case "TASK":
 			view = new MessageView({model: model});
 			break;
 		case "CHANNEL":
@@ -52,11 +53,16 @@ module.exports = Backbone.View.extend({
 			break;
 		}
 		this.listenTo(view, 'message-clicked', this.onMessageClicked);
+		this.listenTo(view, 'promote-to-task-clicked', this.onPromoteToTaskClicked)
 		return view;
 	},
 	
 	onMessageClicked: function(messageView) {
 		this.trigger("message-clicked", messageView);
+	},
+	
+	onPromoteToTaskClicked: function(messageView) {
+		this.trigger("promote-to-task-clicked", messageView);
 	},
 	
 	clear: function() {

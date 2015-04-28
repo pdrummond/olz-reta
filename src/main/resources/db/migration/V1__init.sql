@@ -19,7 +19,7 @@ CREATE TABLE messages (
 	title TEXT,
 	content TEXT,
 	channelId UUID, 
-	archived BOOLEAN NOT NULL DEFAULT false,
+	status INTEGER,
 	createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 	updatedAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
 	createdBy TEXT, 

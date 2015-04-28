@@ -1,9 +1,7 @@
 package iode.olz.reta.handler;
 
-import iode.olz.reta.dao.HashTag;
 import iode.olz.reta.dao.OlzMessage;
 import iode.olz.reta.dao.OlzMessageType;
-import iode.olz.reta.dao.ParsedTags;
 import iode.olz.reta.dao.UserTag;
 import iode.olz.reta.repo.HashTagRepository;
 import iode.olz.reta.repo.OlzMessageRepository;
@@ -12,15 +10,13 @@ import iode.olz.reta.service.BroadcastMessageService;
 import iode.olz.reta.service.TagParserService;
 
 import java.security.Principal;
-import java.util.UUID;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class ChatMessageHandler extends AbstractMessageHandler {
+public class PromoteToTaskHandler extends AbstractMessageHandler {
 	
 	@Autowired
 	BroadcastMessageService broadcastMessageService;
@@ -35,29 +31,21 @@ public class ChatMessageHandler extends AbstractMessageHandler {
 	HashTagRepository hashTagRepo;
 
 
-    @MessageMapping("/chat-message")
-    public OlzResult onChatMessage(OlzMessage message, Principal principal) throws Exception {
+    @MessageMapping("/promote-to-task")
+    public OlzResult onPromoteToTaskMessage(OlzMessage message, Principal principal) throws Exception {
     	message = fillMessage(message, principal);
     	message = validateMessage(message);    	
     	persistMessage(message);
-    	extractAndPersistHashTags(message);
-        broadcastMessage(message);                
+    	broadcastMessage(message); 
+    	OlzMessage referredMessage = updateReferredMessage(message);
+    	broadcastMessage(referredMessage);
         return success();
     }
 
 	private OlzMessage fillMessage(OlzMessage message, Principal principal) {
 		UserTag curUserTag = getUserTagFromPrincipal(principal);
-		
-		String query = FilterMessageHandler.filterQuery;
-		String content = message.getContent();
-		if(!StringUtils.isEmpty(query) && content.indexOf(query) == -1 ) {			
-			content = content + " " + FilterMessageHandler.filterQuery;
-		}
 		return new OlzMessage.Builder(message)
-				.id(message.getId()==null?UUID.randomUUID().toString():message.getId())
-				.messageType(OlzMessageType.COMMENT)
-				.content(content)
-				.createdBy(curUserTag)
+				.messageType(OlzMessageType.PROMOTE_TO_TASK)
 				.updatedBy(curUserTag)
 				.build();
 	}
@@ -67,18 +55,14 @@ public class ChatMessageHandler extends AbstractMessageHandler {
 	}
 
 	private OlzMessage persistMessage(OlzMessage message) {
-		return messageRepo.createMessage(message);
+		return messageRepo.updateMessage(message);
 	} 
+	
+	private OlzMessage updateReferredMessage(OlzMessage message) {
+		return messageRepo.updateMessage(new OlzMessage.Builder(message.getReferredMessage()).messageType(OlzMessageType.TASK).build());
+	}
 	
 	private void broadcastMessage(OlzMessage message) {
 		broadcastMessageService.sendMessage(message);
-	}
-	
-	private void extractAndPersistHashTags(OlzMessage message) {
-		ParsedTags parsedTags = tagParserService.parseMessage(message);
-		for(HashTag hashTag : parsedTags.getHashTags()) {
-			hashTagRepo.createHashTag(hashTag);
-		}
-	}
-	
+	}	
 }
