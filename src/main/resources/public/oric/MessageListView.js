@@ -50,7 +50,7 @@ module.exports = Backbone.View.extend({
 			break;
 		case "CHANNEL":
 			view = new ChannelView({model: model});
-			break;
+			break;		
 		}
 		this.listenTo(view, 'message-clicked', this.onMessageClicked);
 		this.listenTo(view, 'promote-to-task-clicked', this.onPromoteToTaskClicked)

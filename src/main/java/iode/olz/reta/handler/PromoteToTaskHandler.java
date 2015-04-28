@@ -35,10 +35,9 @@ public class PromoteToTaskHandler extends AbstractMessageHandler {
     public OlzResult onPromoteToTaskMessage(OlzMessage message, Principal principal) throws Exception {
     	message = fillMessage(message, principal);
     	message = validateMessage(message);    	
-    	persistMessage(message);
+    	message = persistMessage(message);
     	broadcastMessage(message); 
-    	OlzMessage referredMessage = updateReferredMessage(message);
-    	broadcastMessage(referredMessage);
+    	updateReferredMessage(message);
         return success();
     }
 

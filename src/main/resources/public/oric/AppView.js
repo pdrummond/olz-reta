@@ -163,8 +163,12 @@ module.exports = Backbone.View.extend({
 		case "CHANNEL": 
 			var view = this.messageListView.addMessageView(messageModel);
 			this.updateMessageVisibility(view);
-			break;				
-		default: console.log("MESSAGE RECIEVED: " + message.messageType); break;
+			break;
+		case "PROMOTE_TO_TASK":
+			var model = this.messageCollection.get(message.id);
+			model.set('messageType', "TASK");			
+			break;			
+		default: console.log("MESSAGE RECEIVED: " + message.messageType); break;
 		}
 	},
 

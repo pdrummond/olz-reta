@@ -31,7 +31,7 @@ module.exports = Backbone.View.extend({
 			this.$("#item-channel-title").html(channel.title);
 		}
 		this.$("#item-channel-dropdown").toggle(channel != null);
-		$('.dropdown-toggle').dropdown();
+		this.$('.dropdown-toggle').dropdown();
 		if(this.model.get('messageType') == 'TASK') {
 			this.$('.list-group-item').attr('class', 'list-group-item list-group-item-success');
 			this.$("#item-type-button i").attr('class', 'fa fa-tasks');
