@@ -16,7 +16,12 @@ module.exports = Backbone.View.extend({
 	events: {		
 		'click #view-details-menu-item': 'onViewDetailsMenuItemClicked',
 		'click #promote-to-task-menu-item': 'onPromoteToTaskMenuItemClicked',
-		'click #archive-menu-item': 'onArchiveMenuItemClicked'
+		'click #archive-menu-item': 'onArchiveMenuItemClicked',
+		'click #status-open-menu-item': 'onStatusOpenMenuItemClicked',
+		'click #status-in-progress-menu-item': 'onStatusInProgressMenuItemClicked',
+		'click #status-blocked-menu-item': 'onStatusBlockedMenuItemClicked',
+		'click #status-in-test-menu-item': 'onStatusInTestMenuItemClicked',
+		'click #status-done-menu-item': 'onStatusDoneMenuItemClicked',
 	},
 	
 	initialize: function(options) {
@@ -64,6 +69,13 @@ module.exports = Backbone.View.extend({
 				this.$("#item-image").hide();
 				this.$("#message-content").html("<b>@pd</b> restored a message");
 				break;
+			case 'UPDATE_STATUS':
+				this.$('.list-group-item').attr('class', 'list-group-item activity-item');
+				this.$("#item-type-button i").attr('class', 'fa fa-exchange');
+				this.$("#item-status-dropdown").hide();
+				this.$("#item-image").hide();
+				this.$("#message-content").html("<b>@pd</b> changed the status of a message");
+				break;
 				
 				
 		}
@@ -72,6 +84,14 @@ module.exports = Backbone.View.extend({
 		this.$el.toggleClass('archived-message', isArchived);
 		
 		this.$("#archive-menu-item a").text(isArchived?"Restore":"Archive");
+		
+		switch(this.model.get('status')) {
+		case 100: this.$("#current-status").text("Open"); this.$("#current-status-button").attr('class', 'btn btn-default btn-xs dropdown-toggle'); break;
+		case 101: this.$("#current-status").text("In Progress"); this.$("#current-status-button").attr('class', 'btn btn-success btn-xs dropdown-toggle'); break;
+		case 102: this.$("#current-status").text("Blocked"); this.$("#current-status-button").attr('class', 'btn btn-danger btn-xs dropdown-toggle'); break;
+		case 103: this.$("#current-status").text("In Test"); this.$("#current-status-button").attr('class', 'btn btn-warning btn-xs dropdown-toggle'); break;
+		case 104: this.$("#current-status").text("Done"); this.$("#current-status-button").attr('class', 'btn btn-primary btn-xs dropdown-toggle'); break;
+		}
 		
 
 		return this.el;
@@ -88,6 +108,33 @@ module.exports = Backbone.View.extend({
 	onArchiveMenuItemClicked: function() {
 		var messageName = this.model.get('archived')?"restore-message":"archive-message";
 		this.appView.sendMessage(messageName, {
+			referredMessage: this.model.attributes
+		});
+	},
+	
+	onStatusOpenMenuItemClicked: function() {
+		this.sendStatusMessage(100);
+	},
+
+	onStatusInProgressMenuItemClicked: function() {
+		this.sendStatusMessage(101);
+	},
+
+	onStatusBlockedMenuItemClicked: function() {
+		this.sendStatusMessage(102);
+	},
+	
+	onStatusInTestMenuItemClicked: function() {
+		this.sendStatusMessage(103);
+	},
+	
+	onStatusDoneMenuItemClicked: function() {
+		this.sendStatusMessage(104);
+	},
+	
+	sendStatusMessage: function(statusValue) {
+		this.model.set('status', statusValue);
+		this.appView.sendMessage('update-status', {
 			referredMessage: this.model.attributes
 		});
 	},

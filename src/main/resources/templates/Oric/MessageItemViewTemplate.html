@@ -23,14 +23,15 @@
 			</ul>
 	</span>
 	<div id="item-status-dropdown" class="btn-group" style="display:none">
-	  <button type="button" class="btn btn-success btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-	    Open <span class="caret"></span>
+	  <button id="current-status-button" type="button" class="btn btn-success btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+	    <span id="current-status">Open</span> <span class="caret"></span>
 	  </button>
 	  <ul class="dropdown-menu" role="menu">
-	    <li><a href="#">In Progress</a></li>
-	    <li><a href="#">Blocked</a></li>
-	    <li><a href="#">In Test</a></li>
-	    <li><a href="#">Done</a></li>
+	    <li id="status-open-menu-item"><a href="#">Open</a></li>
+	    <li id="status-in-progress-menu-item"><a href="#">In Progress</a></li>
+	    <li id="status-blocked-menu-item"><a href="#">Blocked</a></li>
+	    <li id="status-in-test-menu-item"><a href="#">In Test</a></li>
+	    <li id="status-done-menu-item"><a href="#">Done</a></li>
 	  </ul>
 	</div>
     	<span id="message-content" class="list-group-item-text"></span>

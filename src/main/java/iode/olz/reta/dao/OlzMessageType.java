@@ -10,7 +10,7 @@ public enum OlzMessageType {
 	PROMOTE_TO_TASK(21), 
 	ARCHIVE_MESSAGE(22),
 	RESTORE_MESSAGE(23),
-	
+	UPDATE_STATUS(24),	
 	UPDATE_MESSAGE_EVENT(50); 
 
 	private int typeId;
