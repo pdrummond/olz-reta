@@ -135,3 +135,8 @@ body {
 .archived-message #message-content {
 	text-decoration:line-through;	
 }
+
+.dropdown-align-right {
+	right:0;
+	left:auto !important;
+}

@@ -22,6 +22,7 @@ module.exports = Backbone.View.extend({
 		'click #status-blocked-menu-item': 'onStatusBlockedMenuItemClicked',
 		'click #status-in-test-menu-item': 'onStatusInTestMenuItemClicked',
 		'click #status-done-menu-item': 'onStatusDoneMenuItemClicked',
+		'click #move-chanel-menu-item': 'onMoveChannelMenuItemClicked'
 	},
 	
 	initialize: function(options) {
@@ -30,23 +31,31 @@ module.exports = Backbone.View.extend({
 		this.listenTo(this.model, 'change', this.render);
 	},
 		
-	render: function() {		
+	render: function() {
+		var self = this;
 		this.$el.html(this.template());
 		this.$("#message-content").html(this.model.get('content'));
 		var channel = this.model.get('channel');
 		if(channel != null) {
 			this.$("#item-channel-title").html(channel.title);
+		} else {
+			this.$("#item-channel-title").html("HOME");
 		}
 		this.$("#item-channel-dropdown").toggle(channel != null);
+		this.appView.channelCollection.each(function(channel) {
+			self.$("#item-channel-dropdown-list").append("<li id='move-chanel-menu-item' data-channel-id='" + channel.get('id') + "'><a href='#'>" + channel.get('title') + "</a></li>");
+		});
 		this.$('.dropdown-toggle').dropdown();
 		switch(this.model.get('messageType')) {
 			case 'TASK':
 				this.$("#item-type-button i").attr('class', 'fa fa-tasks');
 				this.$("#item-status-dropdown").css('display', 'inline-block');
+				this.$("#item-channel-dropdown").show();
 				break;
 			case 'COMMENT':
 				this.$("#item-type-button i").attr('class', 'fa fa-comments');
 				this.$("#item-status-dropdown").hide();
+				this.$("#item-channel-dropdown").show();
 				break;
 			case 'PROMOTE_TO_TASK':
 				this.$('.list-group-item').attr('class', 'list-group-item activity-item');
@@ -76,8 +85,20 @@ module.exports = Backbone.View.extend({
 				this.$("#item-image").hide();
 				this.$("#message-content").html("<b>@pd</b> changed the status of a message");
 				break;
-				
-				
+			case 'UPDATE_CHANNEL':
+				this.$('.list-group-item').attr('class', 'list-group-item activity-item');
+				this.$("#item-type-button i").attr('class', 'fa fa-exchange');
+				this.$("#item-status-dropdown").hide();
+				this.$("#item-image").hide();
+				this.$("#message-content").html("<b>@pd</b> moved a message to another channel");
+				break;
+			case 'CHANNEL':
+				this.$('.list-group-item').attr('class', 'list-group-item list-group-item-success');
+				this.$("#item-type-button i").attr('class', 'fa fa-desktop');
+				this.$("#item-status-dropdown").hide();
+				this.$("#item-image").hide();
+				this.$("#message-content").html(this.model.get('createdBy').tag + " created a <b>new channel</b> called " + this.model.get('title'));
+				break;
 		}
 		var isArchived = this.model.get('archived');
 		this.$el.toggle(isArchived === false);
@@ -137,6 +158,17 @@ module.exports = Backbone.View.extend({
 		this.appView.sendMessage('update-status', {
 			referredMessage: this.model.attributes
 		});
+	},
+	
+	onMoveChannelMenuItemClicked: function(ev) {
+		 ev.stopPropagation();
+		 ev.preventDefault();
+		 var channelId = $(ev.target).parent().attr('data-channel-id');
+		 var channelTitle = $(ev.target).text();
+		 this.model.set('channel', {id: channelId, title: channelTitle});
+			this.appView.sendMessage('update-channel', {
+				referredMessage: this.model.attributes
+			});
 	},
 
 	select: function() {		

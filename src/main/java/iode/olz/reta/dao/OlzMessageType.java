@@ -11,6 +11,8 @@ public enum OlzMessageType {
 	ARCHIVE_MESSAGE(22),
 	RESTORE_MESSAGE(23),
 	UPDATE_STATUS(24),	
+	UPDATE_CHANNEL(25),
+	
 	UPDATE_MESSAGE_EVENT(50); 
 
 	private int typeId;
