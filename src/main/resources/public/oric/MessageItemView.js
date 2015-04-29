@@ -7,11 +7,11 @@ var Backbone = require('backbone');
 
 module.exports = Backbone.View.extend({
 	
-	id:"MessageView",
+	id:"MessageItemView",
 	
 	tagName:"li",
 	
-	template: _.template($('#MessageViewTemplate').html()),
+	template: _.template($('#MessageItemViewTemplate').html()),
 	
 	events: {		
 		'click #view-details-menu-item': 'onViewDetailsMenuItemClicked',
@@ -32,13 +32,23 @@ module.exports = Backbone.View.extend({
 		}
 		this.$("#item-channel-dropdown").toggle(channel != null);
 		this.$('.dropdown-toggle').dropdown();
-		if(this.model.get('messageType') == 'TASK') {
-			this.$('.list-group-item').attr('class', 'list-group-item list-group-item-success');
-			this.$("#item-type-button i").attr('class', 'fa fa-tasks');
-			this.$("#item-status-dropdown").css('display', 'inline-block');
-		} else {
-			this.$("#item-type-button i").attr('class', 'fa fa-comments');
-			this.$("#item-status-dropdown").hide();
+		switch(this.model.get('messageType')) {
+			case 'TASK':
+				this.$("#item-type-button i").attr('class', 'fa fa-tasks');
+				this.$("#item-status-dropdown").css('display', 'inline-block');
+				break;
+			case 'COMMENT':
+				this.$("#item-type-button i").attr('class', 'fa fa-comments');
+				this.$("#item-status-dropdown").hide();
+				break;
+			case 'PROMOTE_TO_TASK':
+				this.$('.list-group-item').attr('class', 'list-group-item activity-item');
+				this.$("#item-type-button i").attr('class', 'fa fa-exchange');
+				this.$("#item-status-dropdown").hide();
+				this.$("#item-image").hide();
+				this.$("#message-content").html("<b>@pd</b> promoted a comment to a task");
+				break;
+				
 		}
 
 		return this.el;

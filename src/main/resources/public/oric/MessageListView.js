@@ -5,7 +5,7 @@ var $ = require('jquery');
 var Backbone = require('backbone');
 
 var ChannelView = require("./ChannelView");
-var MessageView = require("./MessageView");
+var MessageItemView = require("./MessageItemView");
 
 module.exports = Backbone.View.extend({
 	id:"MessageListView",	
@@ -13,8 +13,8 @@ module.exports = Backbone.View.extend({
 	
 	initialize: function(options) {		
 		this.collection = options.collection;
-		this.listenTo(this.collection, 'add', this.addMessageView);
-		this.listenTo(this.collection, 'reset', this.addMessageViews);		
+		this.listenTo(this.collection, 'add', this.addMessageItemView);
+		this.listenTo(this.collection, 'reset', this.addMessageItemViews);		
 		this.views = [];
 	},
 	
@@ -23,15 +23,15 @@ module.exports = Backbone.View.extend({
 		return this.el;
 	},
 	
-	addMessageViews: function(messages) {
+	addMessageItemViews: function(messages) {
 		var self = this;
 		_.each(messages.models, function(messageModel) {
-			self.addMessageView(messageModel, {addToBottom:true});
+			self.addMessageItemView(messageModel, {addToBottom:true});
 		});
 	},
 	
-	addMessageView: function(messageModel, opts) {
-		var view = this.createMessageView(messageModel);
+	addMessageItemView: function(messageModel, opts) {
+		var view = this.createMessageItemView(messageModel);
 		if(opts && opts.addToBottom) {
 			this.$("#message-list").append(view.render());
 		} else {
@@ -41,17 +41,8 @@ module.exports = Backbone.View.extend({
 		return view;
 	},
 	
-	createMessageView: function(model) {
-		var view;
-		switch(model.get('messageType')) {
-		case "COMMENT":
-		case "TASK":
-			view = new MessageView({model: model});
-			break;
-		case "CHANNEL":
-			view = new ChannelView({model: model});
-			break;		
-		}
+	createMessageItemView: function(model) {
+		var view = new MessageItemView({model: model});
 		this.listenTo(view, 'message-clicked', this.onMessageClicked);
 		this.listenTo(view, 'promote-to-task-clicked', this.onPromoteToTaskClicked)
 		return view;

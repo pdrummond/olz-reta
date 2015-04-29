@@ -121,3 +121,13 @@ body {
 .user-icon-image:hover {
 	transform: scale(2); 
 }
+
+
+#MessageItemView .activity-item {
+	background: rgb(244, 244, 244) !important;	
+  	border: none !important;  	
+}
+
+#MessageItemView .activity-item #message-content {
+	color:gray !important;
+}

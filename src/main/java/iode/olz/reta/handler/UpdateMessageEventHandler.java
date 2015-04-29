@@ -16,7 +16,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class PromoteToTaskHandler extends AbstractMessageHandler {
+public class UpdateMessageEventHandler extends AbstractMessageHandler {
 	
 	@Autowired
 	BroadcastMessageService broadcastMessageService;
@@ -29,25 +29,21 @@ public class PromoteToTaskHandler extends AbstractMessageHandler {
 	
 	@Autowired
 	HashTagRepository hashTagRepo;
-	
-	@Autowired UpdateMessageEventHandler updateMessageEventHandler;
 
 
-    @MessageMapping("/promote-to-task")
-    public OlzResult onPromoteToTaskMessage(OlzMessage message, Principal principal) throws Exception {
+    @MessageMapping("/update-message-event")
+    public OlzResult createUpdateMessageEvent(OlzMessage message, Principal principal) {
     	message = fillMessage(message, principal);
-    	message = validateMessage(message);    	
-    	persistMessage(message);
-    	broadcastMessage(message); 
-    	updateReferredMessage(message, principal);
+    	message = validateMessage(message);
+    	updateReferredMessage(message.getReferredMessage());
+    	broadcastMessage(message);    	
         return success();
     }
 
 	private OlzMessage fillMessage(OlzMessage message, Principal principal) {
 		UserTag curUserTag = getUserTagFromPrincipal(principal);
 		return new OlzMessage.Builder(message)
-				.messageType(OlzMessageType.PROMOTE_TO_TASK)
-				.createdBy(curUserTag)
+				.messageType(OlzMessageType.UPDATE_MESSAGE_EVENT)
 				.updatedBy(curUserTag)
 				.build();
 	}
@@ -56,15 +52,9 @@ public class PromoteToTaskHandler extends AbstractMessageHandler {
 		return message;
 	}
 
-	private OlzMessage persistMessage(OlzMessage message) {
-		return messageRepo.createMessage(message);
+	private OlzMessage updateReferredMessage(OlzMessage message) {
+		return messageRepo.updateMessage(message);
 	} 
-	
-	private OlzMessage updateReferredMessage(OlzMessage message, Principal principal) {
-		message = message.copyWithNewReferrredMessage(new OlzMessage.Builder(message.getReferredMessage()).messageType(OlzMessageType.TASK).build());
-		updateMessageEventHandler.createUpdateMessageEvent(message, principal);
-		return message;
-	}
 	
 	private void broadcastMessage(OlzMessage message) {
 		broadcastMessageService.sendMessage(message);

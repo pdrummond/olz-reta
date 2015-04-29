@@ -161,13 +161,15 @@ module.exports = Backbone.View.extend({
 		case "COMMENT": 
 		case "TASK": 
 		case "CHANNEL": 
-			var view = this.messageListView.addMessageView(messageModel);
+		case "PROMOTE_TO_TASK":
+			var view = this.messageListView.addMessageItemView(messageModel);
 			this.updateMessageVisibility(view);
 			break;
-		case "PROMOTE_TO_TASK":
-			var model = this.messageCollection.get(message.id);
-			model.set('messageType', "TASK");			
-			break;			
+		case "UPDATE_MESSAGE_EVENT":
+			var referredMessage = message.referredMessage;
+			var model = this.messageCollection.get(referredMessage.id);
+			model.set(referredMessage);
+			break;
 		default: console.log("MESSAGE RECEIVED: " + message.messageType); break;
 		}
 	},
@@ -193,7 +195,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	onMessageClicked: function(messageView) {
-		$("#MessageView a").removeClass('active');
+		$("#MessageItemView a").removeClass('active');
 		messageView.select();
 
 		if(this.messageDetailView.getMessageId() == messageView.getMessageId()) {

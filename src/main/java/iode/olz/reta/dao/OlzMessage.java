@@ -145,4 +145,13 @@ public class OlzMessage {
 		this.createdAt = b.createdAt;
 		this.updatedAt = b.updatedAt;
 	}
+	
+	@Override
+	public String toString() {
+		return "OlzMessage(type=" + this.messageType + ")";
+	}
+
+	public OlzMessage copyWithNewReferrredMessage(OlzMessage referredMessage) {
+		return new OlzMessage.Builder(this).referredMessage(referredMessage).build();
+	}
 }
