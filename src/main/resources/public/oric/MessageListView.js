@@ -11,7 +11,8 @@ module.exports = Backbone.View.extend({
 	id:"MessageListView",	
 	template: _.template($('#MessageListViewTemplate').html()),
 	
-	initialize: function(options) {		
+	initialize: function(options) {
+		this.appView = options.appView;
 		this.collection = options.collection;
 		this.listenTo(this.collection, 'add', this.addMessageItemView);
 		this.listenTo(this.collection, 'reset', this.addMessageItemViews);		
@@ -42,7 +43,7 @@ module.exports = Backbone.View.extend({
 	},
 	
 	createMessageItemView: function(model) {
-		var view = new MessageItemView({model: model});
+		var view = new MessageItemView({appView: this.appView, model: model});
 		this.listenTo(view, 'message-clicked', this.onMessageClicked);
 		this.listenTo(view, 'promote-to-task-clicked', this.onPromoteToTaskClicked)
 		return view;

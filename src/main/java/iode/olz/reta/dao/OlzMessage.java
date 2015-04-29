@@ -8,6 +8,7 @@ public class OlzMessage {
 	private final String title;
 	private final String content;
 	private final Channel channel;
+	private final boolean archived;
 	private final long status;
 	private final OlzMessage referredMessage;
 	private final UserTag createdBy;
@@ -21,6 +22,7 @@ public class OlzMessage {
 			@JsonProperty("title") String title,
 			@JsonProperty("content") String content,
 			@JsonProperty("channel") Channel channel,
+			@JsonProperty("archived") boolean archived,
 			@JsonProperty("status") long status,
 			@JsonProperty("referredMessage") OlzMessage referredMessage,
 			@JsonProperty("createdAt") long createdAt, 
@@ -32,6 +34,7 @@ public class OlzMessage {
 		this.title = title;
 		this.content = content;
 		this.channel = channel;
+		this.archived = archived;
 		this.status = status;
 		this.referredMessage = referredMessage;
 		this.createdAt = createdAt;
@@ -58,6 +61,10 @@ public class OlzMessage {
 	
 	public Channel getChannel() {
 		return channel;
+	}
+	
+	public boolean isArchived() {
+		return archived;
 	}
 
 	public long getStatus() {
@@ -90,6 +97,7 @@ public class OlzMessage {
 		private String title;
 		private String content;
 		private Channel channel;
+		private boolean archived;
 		private long status;
 		private OlzMessage referredMessage;
 		private UserTag createdBy;
@@ -107,6 +115,7 @@ public class OlzMessage {
 			this.title = m.title;
 			this.content = m.content;
 			this.channel = m.channel;
+			this.archived = m.archived;
 			this.status = m.status;
 			this.referredMessage = m.referredMessage;
 			this.createdBy = m.createdBy;
@@ -120,6 +129,7 @@ public class OlzMessage {
 		public Builder title(String val) 				{ this.title = val; return this;}
 		public Builder content(String val) 				{ this.content = val; return this;}
 		public Builder channel(Channel val) 			{ this.channel = val; return this;}
+		public Builder archived(boolean val)			{ this.archived = val; return this;}
 		public Builder status(long val)					{ this.status = val; return this;}
 		public Builder referredMessage(OlzMessage val)  { this.referredMessage = val; return this;}
 		public Builder createdBy(UserTag val) 			{ this.createdBy = val; return this;}
@@ -138,6 +148,7 @@ public class OlzMessage {
 		this.title = b.title;
 		this.content = b.content;
 		this.channel = b.channel;
+		this.archived = b.archived;
 		this.status = b.status;
 		this.referredMessage = b.referredMessage;
 		this.createdBy = b.createdBy;
@@ -153,5 +164,9 @@ public class OlzMessage {
 
 	public OlzMessage copyWithNewReferrredMessage(OlzMessage referredMessage) {
 		return new OlzMessage.Builder(this).referredMessage(referredMessage).build();
+	}
+
+	public OlzMessage copyWithNewArchived(boolean archived) {
+		return new OlzMessage.Builder(this).archived(archived).build();
 	}
 }

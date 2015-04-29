@@ -25,9 +25,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JdbcMessageRepository extends AbstractJdbcRepository implements OlzMessageRepository {
 	private final Logger log = Logger.getLogger(JdbcMessageRepository.class);
-	private static final String MESSAGE_SELECT_SQL = "SELECT m.id, m.messageType, m.title, m.content, m.channelId, m.status, m.createdAt, m.createdBy, m.updatedAt, m.updatedBy FROM messages m";
-	private static final String CREATE_MESSAGE_SQL = "INSERT INTO messages (id, messageType, title, content, channelId, status, createdAt, updatedAt, createdBy, updatedBy) values(UUID(?),?,?,?,UUID(?),?,?,?,?,?)";
-	private static final String UPDATE_MESSAGE_SQL = "UPDATE messages set messageType = ?, title = ?, content = ?, channelId = UUID(?), updatedAt = ?, updatedBy = ? where id = UUID(?)"; 
+	private static final String MESSAGE_SELECT_SQL = "SELECT m.id, m.messageType, m.title, m.content, m.channelId, m.archived, m.status, m.createdAt, m.createdBy, m.updatedAt, m.updatedBy FROM messages m";
+	private static final String CREATE_MESSAGE_SQL = "INSERT INTO messages (id, messageType, title, content, channelId, archived, status, createdAt, updatedAt, createdBy, updatedBy) values(UUID(?),?,?,?,UUID(?),?,?,?,?,?,?)";
+	private static final String UPDATE_MESSAGE_SQL = "UPDATE messages SET messageType = ?, title = ?, content = ?, channelId = UUID(?), archived = ?, status = ?, updatedAt = ?, updatedBy = ? where id = UUID(?)"; 
 	private static final String MESSAGE_ORDER_SQL = " ORDER BY createdAt DESC";
 	private static final String MESSAGE_LIMIT = "50";
 	
@@ -39,7 +39,9 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 		
 		Timestamp fromDateTs = getFromDateTs(fromDate);
 		return jdbcTemplate.query(
-				MESSAGE_SELECT_SQL + " WHERE createdAt < ?" 
+				MESSAGE_SELECT_SQL 
+				+ " WHERE m.createdAt < ?"
+				+ " AND m.archived = false "
 				+ MESSAGE_ORDER_SQL + " LIMIT " + MESSAGE_LIMIT, 
 				new Object[] {fromDateTs},			
 				new DefaultOlzMessageRowMapper());		
@@ -52,6 +54,7 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 		return jdbcTemplate.query(
 				MESSAGE_SELECT_SQL + ", hashtags h "
 				+ " WHERE h.messageId = m.id"
+				+ " AND m.archived = false "
 				+ " AND h.tag ILIKE ? "
 				+ " AND m.createdAt < ?" 
 				+ MESSAGE_ORDER_SQL + " LIMIT " + MESSAGE_LIMIT, 
@@ -116,6 +119,8 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 				ps.setString(++idx, message.getTitle());
 				ps.setString(++idx, message.getContent());
 				ps.setString(++idx, message.getChannel() == null ? null: message.getChannel().getId());
+				ps.setBoolean(++idx, message.isArchived());
+				ps.setLong(++idx, message.getStatus());
 				ps.setTimestamp(++idx, toTimestamp(message.getUpdatedAt()));
 				ps.setString(++idx, message.getUpdatedBy().getTag());
 				ps.setString(++idx, message.getId());
@@ -140,6 +145,7 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 		ps.setString(++idx, message.getTitle());
 		ps.setString(++idx, message.getContent());
 		ps.setString(++idx, message.getChannel() == null ? null : message.getChannel().getId());
+		ps.setBoolean(++idx, message.isArchived());
 		ps.setLong(++idx, message.getStatus());
 		ps.setTimestamp(++idx, now);
 		ps.setTimestamp(++idx, now);
@@ -160,6 +166,7 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 					rs.getString("title"),
 					rs.getString("content"),
 					channel,
+					rs.getBoolean("archived"),
 					rs.getLong("status"),
 					null,
 					toDateLong(rs.getTimestamp("createdAt")),

@@ -15,10 +15,12 @@ module.exports = Backbone.View.extend({
 	
 	events: {		
 		'click #view-details-menu-item': 'onViewDetailsMenuItemClicked',
-		'click #promote-to-task-menu-item': 'onPromoteToTaskMenuItemClicked'
+		'click #promote-to-task-menu-item': 'onPromoteToTaskMenuItemClicked',
+		'click #archive-menu-item': 'onArchiveMenuItemClicked'
 	},
 	
 	initialize: function(options) {
+		this.appView = options.appView;
 		this.message = options.message;
 		this.listenTo(this.model, 'change', this.render);
 	},
@@ -48,8 +50,17 @@ module.exports = Backbone.View.extend({
 				this.$("#item-image").hide();
 				this.$("#message-content").html("<b>@pd</b> promoted a comment to a task");
 				break;
+			case 'ARCHIVE_MESSAGE':
+				this.$('.list-group-item').attr('class', 'list-group-item activity-item');
+				this.$("#item-type-button i").attr('class', 'fa fa-exchange');
+				this.$("#item-status-dropdown").hide();
+				this.$("#item-image").hide();
+				this.$("#message-content").html("<b>@pd</b> archived a message");
+				break;
+				
 				
 		}
+		this.$el.toggle(this.model.get('archived') === false);
 
 		return this.el;
 	},
@@ -60,6 +71,12 @@ module.exports = Backbone.View.extend({
 	
 	onPromoteToTaskMenuItemClicked: function() {
 		this.trigger("promote-to-task-clicked", this);
+	},
+	
+	onArchiveMenuItemClicked: function() {
+		this.appView.sendMessage("archive-message", {
+			referredMessage: this.model.attributes
+		});
 	},
 
 	select: function() {		

@@ -30,7 +30,6 @@ public class UpdateMessageEventHandler extends AbstractMessageHandler {
 	@Autowired
 	HashTagRepository hashTagRepo;
 
-
     @MessageMapping("/update-message-event")
     public OlzResult createUpdateMessageEvent(OlzMessage message, Principal principal) {
     	message = fillMessage(message, principal);

@@ -8,10 +8,10 @@ public enum OlzMessageType {
 	
 	MESSAGE_CONTENT_UPDATED(20), 
 	PROMOTE_TO_TASK(21), 
+	ARCHIVE_MESSAGE(22),
 	
 	UPDATE_MESSAGE_EVENT(50); 
 
-	
 	private int typeId;
 
 	OlzMessageType(int type) {

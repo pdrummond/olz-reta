@@ -28,7 +28,7 @@ module.exports = Backbone.View.extend({
 		this.channelCollection = new ChannelCollection();
 		this.messageCollection = new MessageCollection();
 		this.filterInputView = new FilterInputView();
-		this.messageListView = new MessageListView({collection: this.messageCollection});
+		this.messageListView = new MessageListView({appView: this, collection: this.messageCollection});
 		this.quickAddInputView = new QuickAddInputView();
 		this.hiddenAlertView = new HiddenAlertView();
 		this.messageDetailView = new MessageDetailView();
@@ -158,19 +158,15 @@ module.exports = Backbone.View.extend({
 		console.log("MESSAGE: " + JSON.stringify(message));
 		var messageModel = new Backbone.Model(message);
 		switch(message.messageType) {
-		case "COMMENT": 
-		case "TASK": 
-		case "CHANNEL": 
-		case "PROMOTE_TO_TASK":
-			var view = this.messageListView.addMessageItemView(messageModel);
-			this.updateMessageVisibility(view);
-			break;
 		case "UPDATE_MESSAGE_EVENT":
 			var referredMessage = message.referredMessage;
 			var model = this.messageCollection.get(referredMessage.id);
 			model.set(referredMessage);
 			break;
-		default: console.log("MESSAGE RECEIVED: " + message.messageType); break;
+		default: 
+			var view = this.messageListView.addMessageItemView(messageModel);
+			this.updateMessageVisibility(view);
+			break;
 		}
 	},
 
