@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -30,48 +31,72 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 	private static final String UPDATE_MESSAGE_SQL = "UPDATE messages SET messageType = ?, title = ?, content = ?, channelId = UUID(?), archived = ?, status = ?, updatedAt = ?, updatedBy = ? where id = UUID(?)"; 
 	private static final String MESSAGE_ORDER_SQL = " ORDER BY createdAt DESC";
 	private static final String MESSAGE_LIMIT = "50";
-	
+
 	@Autowired 
 	ChannelRepository channelRepo;
-	
+
 	@Override
 	public List<OlzMessage> getChannels(Date fromDate) {
-		
+		boolean archived = isArchivedFilterFlag();
 		Timestamp fromDateTs = getFromDateTs(fromDate);
 		return jdbcTemplate.query(
 				MESSAGE_SELECT_SQL 
 				+ " WHERE m.createdAt < ?"
-				+ " AND m.archived = false "
+				+ " AND m.archived = ? "
 				+ MESSAGE_ORDER_SQL + " LIMIT " + MESSAGE_LIMIT, 
-				new Object[] {fromDateTs},			
+				new Object[] {fromDateTs, archived},			
 				new DefaultOlzMessageRowMapper());		
 	}
-	
+
+	private boolean isArchivedFilterFlag() {
+		return FilterMessageHandler.filterQuery != null && FilterMessageHandler.filterQuery.contains("is:archived");
+	}
+
 	@Override
 	public List<OlzMessage> getPageOfMessagesWithFilter(Date fromDate, String query) {
-		
-		Timestamp fromDateTs = getFromDateTs(fromDate);
-		return jdbcTemplate.query(
-				MESSAGE_SELECT_SQL + ", hashtags h "
-				+ " WHERE h.messageId = m.id"
-				+ " AND m.archived = false "
-				+ " AND h.tag ILIKE ? "
-				+ " AND m.createdAt < ?" 
-				+ MESSAGE_ORDER_SQL + " LIMIT " + MESSAGE_LIMIT, 
-				new Object[] {FilterMessageHandler.filterQuery, fromDateTs},			
-				new DefaultOlzMessageRowMapper());		
+
+		boolean archived = isArchivedFilterFlag();
+		String filterQueryWithoutFlags = getFilterQueryWithoutFlags();
+
+		if(StringUtils.isEmpty(filterQueryWithoutFlags)) {
+			return getChannels(fromDate);
+		} else {
+			Timestamp fromDateTs = getFromDateTs(fromDate);
+			return jdbcTemplate.query(
+					MESSAGE_SELECT_SQL + ", hashtags h "
+							+ " WHERE h.messageId = m.id"
+							+ " AND m.archived = ? "
+							+ " AND h.tag ILIKE ? "
+							+ " AND m.createdAt < ?" 
+							+ MESSAGE_ORDER_SQL + " LIMIT " + MESSAGE_LIMIT, 
+							new Object[] {archived, filterQueryWithoutFlags, fromDateTs},			
+							new DefaultOlzMessageRowMapper());	
+		}
 	}
-	
+
 	@Override
 	public boolean filterMessage(OlzMessage message) {
+		
+		boolean archived = isArchivedFilterFlag();
+		String filterQueryWithoutFlags = getFilterQueryWithoutFlags();
+		
 		List<OlzMessage> results = jdbcTemplate.query(
 				MESSAGE_SELECT_SQL + ", hashtags h "
-				+ " WHERE h.messageId = m.id"
-				+ " AND m.id = UUID(?)"
-				+ " AND h.tag ILIKE ? ", 
-				new Object[] {message.getId(), FilterMessageHandler.filterQuery},			
-				new DefaultOlzMessageRowMapper());	
+						+ " WHERE h.messageId = m.id"						
+						+ " AND m.id = UUID(?)"
+						+ " AND archived = ? "
+						+ " AND h.tag ILIKE ? ", 
+						new Object[] {message.getId(), archived, filterQueryWithoutFlags},			
+						new DefaultOlzMessageRowMapper());	
 		return results.size() > 0;
+	}
+
+	private String getFilterQueryWithoutFlags() {
+		String query = "";
+		if(!StringUtils.isEmpty(FilterMessageHandler.filterQuery)) {
+			query = FilterMessageHandler.filterQuery.replace("is:archived", "").trim();
+		}
+		return query;
 	}
 
 	@Override
@@ -106,7 +131,7 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 		}
 		return getMessage(id[0]);
 	}
-	
+
 	@Override
 	public OlzMessage updateMessage(final OlzMessage message) {
 		if(log.isDebugEnabled()) {
@@ -156,10 +181,10 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 
 	public class DefaultOlzMessageRowMapper implements RowMapper<OlzMessage> {
 		public OlzMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
-			
+
 			String channelId = rs.getString("channelId");
 			Channel channel = channelId == null? null : channelRepo.getChannel(channelId);
-			
+
 			return new OlzMessage(
 					rs.getString("id"),
 					OlzMessageType.fromTypeId(rs.getInt("messageType")),

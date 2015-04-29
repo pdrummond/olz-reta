@@ -57,10 +57,22 @@ module.exports = Backbone.View.extend({
 				this.$("#item-image").hide();
 				this.$("#message-content").html("<b>@pd</b> archived a message");
 				break;
+			case 'RESTORE_MESSAGE':
+				this.$('.list-group-item').attr('class', 'list-group-item activity-item');
+				this.$("#item-type-button i").attr('class', 'fa fa-exchange');
+				this.$("#item-status-dropdown").hide();
+				this.$("#item-image").hide();
+				this.$("#message-content").html("<b>@pd</b> restored a message");
+				break;
 				
 				
 		}
-		this.$el.toggle(this.model.get('archived') === false);
+		var isArchived = this.model.get('archived');
+		this.$el.toggle(isArchived === false);
+		this.$el.toggleClass('archived-message', isArchived);
+		
+		this.$("#archive-menu-item a").text(isArchived?"Restore":"Archive");
+		
 
 		return this.el;
 	},
@@ -74,7 +86,8 @@ module.exports = Backbone.View.extend({
 	},
 	
 	onArchiveMenuItemClicked: function() {
-		this.appView.sendMessage("archive-message", {
+		var messageName = this.model.get('archived')?"restore-message":"archive-message";
+		this.appView.sendMessage(messageName, {
 			referredMessage: this.model.attributes
 		});
 	},

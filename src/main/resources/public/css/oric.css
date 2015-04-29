@@ -131,3 +131,7 @@ body {
 #MessageItemView .activity-item #message-content {
 	color:gray !important;
 }
+
+.archived-message #message-content {
+	text-decoration:line-through;	
+}
