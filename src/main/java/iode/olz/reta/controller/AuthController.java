@@ -1,5 +1,6 @@
 package iode.olz.reta.controller;
 
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import iode.olz.reta.dao.OlzUser;
 import iode.olz.reta.dao.RegistrationFormUser;
 import iode.olz.reta.repo.OlzUserRepository;
@@ -19,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class AuthController {
@@ -26,6 +28,11 @@ public class AuthController {
 	
 	@Autowired
 	OlzUserRepository userRepo;
+	
+	@RequestMapping(value = "/heartbeat", method = POST)    
+	public @ResponseBody String heartbeat() {
+		return "ok";
+	}
 
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String loginForm(Model model) {

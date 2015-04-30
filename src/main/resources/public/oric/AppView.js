@@ -14,6 +14,7 @@ var QuickAddInputView = require('./QuickAddInputView');
 var HiddenAlertView = require('./HiddenAlertView');
 var MessageDetailView = require("./MessageDetailView");
 var ChannelDropDownView = require("./ChannelDropDownView");
+var MessageDialog = require("./MessageDialog");
 
 module.exports = Backbone.View.extend({
 
@@ -51,6 +52,8 @@ module.exports = Backbone.View.extend({
 				self.fetchMessages();
 			});
 		});
+		
+		this.setupHeartBeat();
 	},
 
 	fetchMessages: function() {
@@ -164,8 +167,9 @@ module.exports = Backbone.View.extend({
 			model.set(referredMessage);
 			break;
 		default: 
-			var view = this.messageListView.addMessageItemView(messageModel);
-			this.updateMessageVisibility(view);
+			this.messageCollection.add(messageModel);
+			//var view = this.messageListView.addMessageItemView(messageModel);
+			//this.updateMessageVisibility(view);
 			break;
 		}
 	},
@@ -226,5 +230,42 @@ module.exports = Backbone.View.extend({
 			show = viewChannelId == this.curChannelModel.get('id');
 		}
 		view.$el.toggle(show);
-	}
+	},
+	
+	setupHeartBeat: function() {		
+		var self = this;		
+		this.heartBeatInterval = setInterval(function() {
+			$.post("/heartbeat", function(result) {
+				//all good!
+			}).fail(function(resp, textStatus, errorThrown) {
+				self.stopHeartBeats();
+				self.showLoggedOutDialog();
+			});
+		}, 10000); 
+	},
+	
+	stopHeartBeats: function() {
+		clearInterval(this.heartBeatInterval);
+		delete this.heartBeatInterval;
+	},
+	
+	showLoggedOutDialog: function() {
+		if(!this.loggedOutDialogShown) {
+			this.loggedOutDialogShown = true;
+			var dialog = new MessageDialog({
+				title: "You have been logged out", 
+				okText: "Login",
+				cancelText: "No thanks",
+				allowCancel: true,
+				msg: "Please enter your login details again to continue."
+			});
+			dialog.open();
+			this.listenTo(dialog, 'ok', function() {
+				window.location.href = "/login";
+			});
+			this.listenTo(dialog, 'cancel', function() {
+				window.location.href = "/welcome";
+			});
+		}
+	},
 });

@@ -1,6 +1,7 @@
 package iode.olz.reta.config;
 
 import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,16 +12,19 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebMvcSecurity //"Mvc" gives us Thymeleaf csrf support
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	private static final int TWO_WEEKS_IN_SECONDS = 1209600;
 
 	@Autowired
 	DataSource dataSource;
-	
+
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth
@@ -31,10 +35,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.usersByUsernameQuery("SELECT userId AS username, password, enabled FROM users WHERE userId=?")               
 		.authoritiesByUsernameQuery("SELECT userId AS username, authority FROM authorities WHERE userId = ?");
 	}
-	
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-	    return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder();
 	}
 
 	@Override
@@ -55,6 +59,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginPage("/login")							
 				.permitAll()
 				.and()
-				.csrf();
+				.csrf()
+				.and()
+				.rememberMe()
+				.tokenRepository(persistentTokenRepository())
+				.tokenValiditySeconds(TWO_WEEKS_IN_SECONDS);
+	}
+
+	//for RememberMe functionality
+	@Bean	
+	public PersistentTokenRepository persistentTokenRepository() { 
+		JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+		db.setDataSource(dataSource);
+		return db;
 	}
 }
