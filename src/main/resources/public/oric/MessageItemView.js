@@ -35,6 +35,7 @@ module.exports = Backbone.View.extend({
 		var self = this;
 		this.$el.html(this.template());
 		this.$("#message-content").html(this.model.get('content'));
+		this.$el.addClass("item-type-" + this.model.get('messageType').toLowerCase());
 		var channel = this.model.get('channel');
 		if(channel != null) {
 			this.$("#item-channel-title").html(channel.title);

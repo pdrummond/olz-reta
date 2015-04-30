@@ -112,16 +112,14 @@ body {
 }
 
 .user-icon-image {
-	width:15px;
-	border-radius:15px;
-	transition: all 0.2s ease-in-out;
-	z-index:10;	
+	width: 20px;
+  	border-radius: 10px;
 }
 
-.user-icon-image:hover {
-	transform: scale(2); 
+#MessageItemView .list-group-item {
+	padding-left: 3px;
+	padding-right: 10px;
 }
-
 
 #MessageItemView .activity-item {
 	background: rgb(244, 244, 244) !important;	
@@ -139,4 +137,18 @@ body {
 .dropdown-align-right {
 	right:0;
 	left:auto !important;
+}
+
+
+#item-type-icon {
+	font-size: 1.5em;
+	color:lightgray;
+}
+
+.item-type-comment #item-type-icon {
+	color: #D7B325;
+}
+
+.item-type-task #item-type-icon {
+	color: #3BBAD8;
 }
