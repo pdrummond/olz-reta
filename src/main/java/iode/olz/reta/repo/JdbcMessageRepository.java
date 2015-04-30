@@ -30,13 +30,13 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 	private static final String CREATE_MESSAGE_SQL = "INSERT INTO messages (id, messageType, title, content, channelId, archived, status, createdAt, updatedAt, createdBy, updatedBy) values(UUID(?),?,?,?,UUID(?),?,?,?,?,?,?)";
 	private static final String UPDATE_MESSAGE_SQL = "UPDATE messages SET messageType = ?, title = ?, content = ?, channelId = UUID(?), archived = ?, status = ?, updatedAt = ?, updatedBy = ? where id = UUID(?)"; 
 	private static final String MESSAGE_ORDER_SQL = " ORDER BY createdAt DESC";
-	private static final String MESSAGE_LIMIT = "50";
+	private static final String MESSAGE_LIMIT = "5";
 
 	@Autowired 
 	ChannelRepository channelRepo;
 
 	@Override
-	public List<OlzMessage> getChannels(Date fromDate) {
+	public List<OlzMessage> getPageOfMessages(Date fromDate) {
 		boolean archived = isArchivedFilterFlag();
 		Timestamp fromDateTs = getFromDateTs(fromDate);
 		return jdbcTemplate.query(
@@ -59,7 +59,7 @@ public class JdbcMessageRepository extends AbstractJdbcRepository implements Olz
 		String filterQueryWithoutFlags = getFilterQueryWithoutFlags();
 
 		if(StringUtils.isEmpty(filterQueryWithoutFlags)) {
-			return getChannels(fromDate);
+			return getPageOfMessages(fromDate);
 		} else {
 			Timestamp fromDateTs = getFromDateTs(fromDate);
 			return jdbcTemplate.query(

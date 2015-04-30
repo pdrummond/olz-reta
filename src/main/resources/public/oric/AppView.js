@@ -54,6 +54,7 @@ module.exports = Backbone.View.extend({
 		});
 		
 		this.setupHeartBeat();
+		this.setupCheckScroll();
 	},
 
 	fetchMessages: function() {
@@ -67,6 +68,7 @@ module.exports = Backbone.View.extend({
 					success:function() {
 						self.updateMessagesVisibility();						
 						$("body").show();
+						self.maybeFetchMoreMessages();
 					}			
 				});
 			}
@@ -268,4 +270,97 @@ module.exports = Backbone.View.extend({
 			});
 		}
 	},
+	
+	setupCheckScroll: function() {
+		var self = this;
+		$(window).scroll(function() {			
+			self.checkScroll();
+		});
+	},
+	
+	checkScroll: function () {
+		var docHeight = ($(document).height() - 200);
+		//console.log("window height   : " + ($(window).scrollTop() + $(window).height()));
+		//console.log("document height : " + docHeight);
+		var scrollTop = $(window).scrollTop();
+		//console.log("scrollTop: " + scrollTop);
+		if(!this.messageCollection.noMoreMessages && ( $(window).scrollTop() + $(window).height() ) >= $(document).height() - 200) {
+			this.fetchMoreMessages(true);
+		}		
+	},
+	
+	fetchMoreMessages: function(callback) {
+		var self = this;
+		if(!this.isFetching) {
+			var messages = new MessageCollection();
+			messages.showMoreDate = this.messageCollection.showMoreDate;
+			this.isFetching = true;			
+			this.$("#show-more-busy").show();		
+			messages.fetch({
+				success: function(collection, resp) {
+					self.isFetching = false;
+					self.$("#show-more-busy").hide();
+					self.messageCollection.showMoreDate = messages.showMoreDate;
+					self.messageCollection.noMoreMessages = messages.noMoreMessages;
+					if(collection.length > 0) {
+						self.messageCollection.add(collection.models, {silent:true}); //ssh!  Add messages to list view manually below to ensure they go at the end of the list
+						self.messageListView.addMessageItemViews(collection);
+					}
+					if(callback) {
+						callback(true);
+					}
+				},
+				error: function(collection, response) {
+					self.isFetching = false;					
+					self.$("#show-more-busy").hide();					
+					self.showErrorDialogForResponse("Error fetching messages", response);
+					if(callback) {
+						callback(false);
+					}
+				}
+			});		
+		}
+	},
+	
+	showErrorDialogForResponse: function(errorTitle, response) {
+		if((response.status == 401 || response.status == 403)) {
+			this.showLoggedOutDialog();
+		} else {			
+			//this.showMessageDialog("<i id='dialog-error-msg-icon' class='fa fa-exclamation-triangle'></i> " + errorTitle, errorMessage);
+			//this.showErrorGrowl(errorTitle, this.getErrorMessageFromResponse(response));
+			console.log(errorTitle + ": " + this.getErrorMessageFromResponse(response));
+		}
+	},
+	
+	getErrorMessageFromResponse: function(response) {
+		var errorMessage = "Unknown error";
+		if(response.responseJSON) {
+			var status = response.responseJSON.status;
+			errorMessage = response.responseJSON.message;
+		}
+		return errorMessage;
+	},
+
+	maybeFetchMoreMessages: function() {
+		console.log("maybeFetchMoreMessages");
+		//console.log("doc :" + $(document).height());
+		//console.log("win :" + $(window).height());
+		//console.log("list:" + this.$('#message-list').height());
+		var self = this;
+		if(this.$('#message-list').height() < $(window).height()) {
+			this.$("#show-more-busy").show();
+			this.fetchMoreMessages(function(ok) {
+				if(ok && !self.messageCollection.noMoreMessages) {
+					//maybe fetch older messages if previous fetch didn't fill screen 
+					var more = self.maybeFetchMoreMessages();
+					if(more == false) {
+						//fetching is done
+					}
+				}
+			});
+			return true;
+		} else {			
+			return false;
+		}
+	}
 });

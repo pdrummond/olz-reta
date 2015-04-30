@@ -1,6 +1,7 @@
 package iode.olz.reta.controller;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import iode.olz.reta.dao.MessageBatch;
 import iode.olz.reta.dao.OlzMessage;
 import iode.olz.reta.handler.FilterMessageHandler;
 import iode.olz.reta.repo.OlzMessageRepository;
@@ -25,7 +26,7 @@ public class OlzMessageController {
 	OlzMessageRepository messageRepo;
 
 	@RequestMapping(method=GET)
-	public List<OlzMessage> getPageOfMessages(@RequestParam(value="fromDate", required=false) Long from, Principal principal) {		
+	public MessageBatch<OlzMessage> getPageOfMessages(@RequestParam(value="fromDate", required=false) Long from, Principal principal) {		
 		if(log.isDebugEnabled()) {
 			log.debug("> getPageOfMessages(from="+ from + ")");
 		}
@@ -37,12 +38,17 @@ public class OlzMessageController {
 		
 		List<OlzMessage> messages = 
 				StringUtils.isEmpty(FilterMessageHandler.filterQuery) 
-				? messageRepo.getChannels(fromDate) 
+				? messageRepo.getPageOfMessages(fromDate) 
 				: messageRepo.getPageOfMessagesWithFilter(fromDate, FilterMessageHandler.filterQuery);
-
+		
+		long showMoreDate = new Date().getTime();
+		if(!messages.isEmpty()) {			
+			showMoreDate = messages.get(messages.size() - 1).getCreatedAt();
+		}
+		MessageBatch<OlzMessage> messageBatch = new MessageBatch<OlzMessage>(messages, showMoreDate, messages.isEmpty());
 		if(log.isDebugEnabled()) {
 			log.debug("< getPageOfMessages()");
 		}
-		return messages;
+		return messageBatch;
 	}
 }

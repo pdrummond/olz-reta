@@ -9,8 +9,20 @@ module.exports = Backbone.Collection.extend({
 	comparator : function(message) {
 		return -message.get('createdAt');
 	},
+	
+	parse: function(response, options) {
+		this.showMoreDate = response.showMoreDate;
+		this.noMoreMessages = response.noMoreMessages;
+		return response.messages;
+	},
 
 	url: function() {
-		return "/rest/messages";
+		var url = "/rest/messages";
+		var ch = "?";
+		if(this.showMoreDate) {
+			url += ch + 'fromDate=' + this.showMoreDate;
+			ch = "&";
+		}
+		return url;
 	}
 });
