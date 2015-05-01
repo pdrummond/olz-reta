@@ -28,7 +28,7 @@ module.exports = Backbone.View.extend({
 	initialize: function() {
 		this.channelCollection = new ChannelCollection();
 		this.messageCollection = new MessageCollection();
-		this.filterInputView = new FilterInputView();
+		this.filterInputView = new FilterInputView({appView: this});
 		this.messageListView = new MessageListView({appView: this, collection: this.messageCollection});
 		this.quickAddInputView = new QuickAddInputView();
 		this.hiddenAlertView = new HiddenAlertView();
@@ -111,6 +111,7 @@ module.exports = Backbone.View.extend({
 	setFilter: function(query) {
 		var message = {content: query};
 		this.onFilterMessage(message);
+		this.filterInputView.setFilter(query);
 		if(query.length == 0) {
 			this.hiddenAlertView.resetHiddenMessageCount();
 		}

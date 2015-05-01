@@ -112,7 +112,7 @@ body {
 }
 
 .user-icon-image {
-	width: 20px;
+	width: 15px;
   	border-radius: 10px;
 }
 
@@ -123,7 +123,8 @@ body {
 
 #MessageItemView .activity-item {
 	background: rgb(244, 244, 244) !important;	
-  	border: none !important;  	
+  	border: none !important;
+  	padding:0;  	
 }
 
 #MessageItemView .activity-item #message-content {
@@ -132,6 +133,11 @@ body {
 
 .archived-message #message-content {
 	text-decoration:line-through;	
+}
+
+#message-content {
+	margin-left:35px;
+	padding-top:5px;
 }
 
 .dropdown-align-right {
@@ -151,4 +157,39 @@ body {
 
 .item-type-task #item-type-icon {
 	color: #3BBAD8;
+}
+
+#item-type-button {
+	padding:0;
+	padding-left:5px;
+}
+
+#message-header-details {
+	color: #BABABA;
+	text-transform: uppercase;
+	font-size:12px;
+}
+
+.channel-icon {
+	color: purple;
+}
+
+.task-icon {
+	color:#3BBAD8;
+}
+
+.chat-icon {
+	color:#D7B325;
+}
+
+.article-icon {
+	color:brown;
+}
+
+.label-icon {
+	color:green;
+}
+
+.milestone-icon {
+	color: #E73E3E;
 }

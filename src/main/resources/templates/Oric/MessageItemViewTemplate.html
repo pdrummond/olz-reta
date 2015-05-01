@@ -9,6 +9,18 @@
     	<!-- <img id="item-image" src="" style="width:30px"/> -->
     	<!-- <strong style="color:gray"> <span id="message-user-tag">Paul</span>:</strong>-->
 
+	
+	<div id="message-heading" class="list-group-item-heading">
+	<div id="message-heading-left" class="pull-left">
+	<span id="item-type-dropdown" class="dropdown">
+			<button id="item-type-button" class="btn btn-borderless dropdown-toggle btn-xs" type="button" data-toggle="dropdown" aria-expanded="true">
+				<i id="item-type-icon" class="fa fa-comments"></i>
+			</button>
+			<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				<li id="promote-to-task-menu-item" role="presentation"><a role="menuitem" tabindex="-1" href="#">Change to Task</a></li>
+				<li id="promote-to-comment-menu-item" role="presentation"><a role="menuitem" tabindex="-1" href="#">Change to Comment</a></li>
+			</ul>
+	</span>
 	<span id="item-image-dropdown" class="dropdown">
 			<button id="item-type-button" class="btn btn-borderless dropdown-toggle btn-xs" type="button" data-toggle="dropdown" aria-expanded="true">
 				<img id="item-image" class="user-icon-image" src="https://www.gravatar.com/avatar/855a57ef74a62bc22b38b7e1584d2ae3?d=retro&amp;s=20"/>
@@ -22,16 +34,6 @@
 				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Bob Joggs (Tester)</a></li>
 			</ul>
 	</span>
-	
-	<span id="item-type-dropdown" class="dropdown">
-			<button id="item-type-button" class="btn btn-borderless dropdown-toggle btn-xs" type="button" data-toggle="dropdown" aria-expanded="true">
-				<i id="item-type-icon" class="fa fa-comments"></i>
-			</button>
-			<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-				<li id="promote-to-task-menu-item" role="presentation"><a role="menuitem" tabindex="-1" href="#">Change to Task</a></li>
-				<li id="promote-to-comment-menu-item" role="presentation"><a role="menuitem" tabindex="-1" href="#">Change to Comment</a></li>
-			</ul>
-	</span>
 	<div id="item-status-dropdown" class="btn-group" style="display:none">
 	  <button id="current-status-button" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 	    <span id="current-status">Open</span> <span class="caret"></span>
@@ -42,15 +44,15 @@
 	    <li id="status-blocked-menu-item"><a href="#">Blocked</a></li>
 	    <li id="status-in-test-menu-item"><a href="#">In Test</a></li>
 	    <li id="status-done-menu-item"><a href="#">Done</a></li>
-	  </ul>
+	  </ul>	  
 	</div>
-    	<span id="message-content" class="list-group-item-text"></span>
-
-		<div class="pull-right">		
-		<div id="item-channel-dropdown" class="btn-group pull-left" role="group" aria-label="...">
+	<span id="message-header-details">Paul Drummond 5 minutes ago</span>
+	</div>
+	<div id="message-heading-right" class="pull-right">
+	<div id="item-channel-dropdown" class="btn-group pull-left" role="group" aria-label="..." title="Channel">
 			<div class="btn-group" role="group">
 				<button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">
-					<span id="item-channel-title"></span> <span class="caret"></span>
+					<i class="fa fa-desktop channel-icon"></i> <span id="item-channel-title"></span> <span class="caret"></span>
 				</button>
 				<ul id="item-channel-dropdown-list" class="dropdown-menu dropdown-align-right" role="menu">					
 				</ul>
@@ -65,7 +67,14 @@
 				<li id="archive-menu-item" role="presentation"><a role="menuitem" tabindex="-1" href="#">Archive</a></li>
 			</ul>
 		</div>
-		</div>
+	</div>
+	</div>
+	
+    <div id="message-content" class="list-group-item-text" style="clear:both"></div>
+
+				
+		
+		
 	</div>
     
 </div>

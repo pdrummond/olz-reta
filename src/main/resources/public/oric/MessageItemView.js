@@ -59,39 +59,19 @@ module.exports = Backbone.View.extend({
 				this.$("#item-channel-dropdown").show();
 				break;
 			case 'PROMOTE_TO_TASK':
-				this.$('.list-group-item').attr('class', 'list-group-item activity-item');
-				this.$("#item-type-button i").attr('class', 'fa fa-exchange');
-				this.$("#item-status-dropdown").hide();
-				this.$("#item-image").hide();
-				this.$("#message-content").html("<b>@pd</b> promoted a comment to a task");
+				this.renderActivityView("<b>@pd</b> promoted a comment to a task");
 				break;
 			case 'ARCHIVE_MESSAGE':
-				this.$('.list-group-item').attr('class', 'list-group-item activity-item');
-				this.$("#item-type-button i").attr('class', 'fa fa-exchange');
-				this.$("#item-status-dropdown").hide();
-				this.$("#item-image").hide();
-				this.$("#message-content").html("<b>@pd</b> archived a message");
+				this.renderActivityView("<b>@pd</b> archived a message");
 				break;
 			case 'RESTORE_MESSAGE':
-				this.$('.list-group-item').attr('class', 'list-group-item activity-item');
-				this.$("#item-type-button i").attr('class', 'fa fa-exchange');
-				this.$("#item-status-dropdown").hide();
-				this.$("#item-image").hide();
-				this.$("#message-content").html("<b>@pd</b> restored a message");
+				this.renderActivityView("<b>@pd</b> restored a message");
 				break;
 			case 'UPDATE_STATUS':
-				this.$('.list-group-item').attr('class', 'list-group-item activity-item');
-				this.$("#item-type-button i").attr('class', 'fa fa-exchange');
-				this.$("#item-status-dropdown").hide();
-				this.$("#item-image").hide();
-				this.$("#message-content").html("<b>@pd</b> changed the status of a message");
+				this.renderActivityView("<b>@pd</b> changed the status of a message");
 				break;
 			case 'UPDATE_CHANNEL':
-				this.$('.list-group-item').attr('class', 'list-group-item activity-item');
-				this.$("#item-type-button i").attr('class', 'fa fa-exchange');
-				this.$("#item-status-dropdown").hide();
-				this.$("#item-image").hide();
-				this.$("#message-content").html("<b>@pd</b> moved a message to another channel");
+				this.renderActivityView("<b>@pd</b> moved a message to another channel");
 				break;
 			case 'CHANNEL':
 				this.$('.list-group-item').attr('class', 'list-group-item list-group-item-success');
@@ -117,6 +97,14 @@ module.exports = Backbone.View.extend({
 		
 
 		return this.el;
+	},
+	
+	renderActivityView: function(msg) {
+		this.$('.list-group-item').attr('class', 'list-group-item activity-item');
+		this.$("#item-type-button i").attr('class', 'fa fa-exchange');
+		this.$("#item-status-dropdown").hide();
+		this.$("#item-image").hide();
+		this.$("#message-header-details").html(msg + " 5 minutes ago");
 	},
 	
 	onViewDetailsMenuItemClicked: function() {
