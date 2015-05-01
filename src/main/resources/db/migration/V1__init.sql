@@ -19,6 +19,7 @@ CREATE TABLE messages (
 	title TEXT,
 	content TEXT,
 	channelId UUID,
+	milestoneId UUID,
 	archived BOOLEAN DEFAULT FALSE,
 	status INTEGER,
 	createdAt TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),

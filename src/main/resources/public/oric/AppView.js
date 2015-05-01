@@ -49,29 +49,32 @@ module.exports = Backbone.View.extend({
 			console.log("Connected to OLZ-RETA");
 			$.get("/rest/filter", function(filterQuery) {
 				self.filterInputView.setFilter(filterQuery);
-				self.fetchMessages();
+				self.channelCollection.fetch({
+					reset: true,
+					success:function() {
+						self.fetchMessages();
+					}
+				});
+
 			});
 		});
-		
+
 		this.setupHeartBeat();
 		this.setupCheckScroll();
 	},
 
 	fetchMessages: function() {
 		var self = this;
-		this.messageListView.clear();
-		this.channelCollection.fetch({
-			reset: true,
+		this.messageListView.clear();		
+		this.messageCollection.showMoreDate = null;
+		this.messageCollection.noMoreMessages = false;
+		self.messageCollection.fetch({
+			reset:true,
 			success:function() {
-				self.messageCollection.fetch({
-					reset:true,
-					success:function() {
-						self.updateMessagesVisibility();						
-						$("body").show();
-						self.maybeFetchMoreMessages();
-					}			
-				});
-			}
+				self.updateMessagesVisibility();						
+				$("body").show();
+				self.maybeFetchMoreMessages();
+			}			
 		});
 	},
 
@@ -129,7 +132,7 @@ module.exports = Backbone.View.extend({
 	onCreateChannel: function(channelTitle) {
 		this.sendMessage('channel', {title: channelTitle});
 	},
-	
+
 	onChannelClicked: function(model) {
 		this.curChannelModel = model;
 		this.updateMessagesVisibility();
@@ -138,7 +141,7 @@ module.exports = Backbone.View.extend({
 	onMessageContentUpdated: function(message) {
 		this.sendMessage("message-content-updated", message);
 	},
-	
+
 	onPromoteToTaskClicked: function(messageView) {
 		this.sendMessage("promote-to-task", {
 			messageType: "PROMOTE_TO_TASK",
@@ -171,9 +174,9 @@ module.exports = Backbone.View.extend({
 			break;
 		default: 
 			this.messageCollection.add(messageModel);
-			//var view = this.messageListView.addMessageItemView(messageModel);
-			//this.updateMessageVisibility(view);
-			break;
+		//var view = this.messageListView.addMessageItemView(messageModel);
+		//this.updateMessageVisibility(view);
+		break;
 		}
 	},
 
@@ -218,7 +221,7 @@ module.exports = Backbone.View.extend({
 		$("#app-container").animate({left: '0%'}, 100);
 		$(el).animate({left: '-60%'}, 100);
 	},
-	
+
 	updateMessagesVisibility: function() {
 		var self = this;
 		_.each(this.messageListView.getViews(), function(view) {
@@ -234,7 +237,7 @@ module.exports = Backbone.View.extend({
 		}
 		view.$el.toggle(show);
 	},
-	
+
 	setupHeartBeat: function() {		
 		var self = this;		
 		this.heartBeatInterval = setInterval(function() {
@@ -246,12 +249,12 @@ module.exports = Backbone.View.extend({
 			});
 		}, 10000); 
 	},
-	
+
 	stopHeartBeats: function() {
 		clearInterval(this.heartBeatInterval);
 		delete this.heartBeatInterval;
 	},
-	
+
 	showLoggedOutDialog: function() {
 		if(!this.loggedOutDialogShown) {
 			this.loggedOutDialogShown = true;
@@ -271,14 +274,14 @@ module.exports = Backbone.View.extend({
 			});
 		}
 	},
-	
+
 	setupCheckScroll: function() {
 		var self = this;
 		$(window).scroll(function() {			
 			self.checkScroll();
 		});
 	},
-	
+
 	checkScroll: function () {
 		var docHeight = ($(document).height() - 200);
 		//console.log("window height   : " + ($(window).scrollTop() + $(window).height()));
@@ -286,10 +289,10 @@ module.exports = Backbone.View.extend({
 		var scrollTop = $(window).scrollTop();
 		//console.log("scrollTop: " + scrollTop);
 		if(!this.messageCollection.noMoreMessages && ( $(window).scrollTop() + $(window).height() ) >= $(document).height() - 200) {
-			this.fetchMoreMessages(true);
+			this.fetchMoreMessages();
 		}		
 	},
-	
+
 	fetchMoreMessages: function(callback) {
 		var self = this;
 		if(!this.isFetching) {
@@ -322,7 +325,7 @@ module.exports = Backbone.View.extend({
 			});		
 		}
 	},
-	
+
 	showErrorDialogForResponse: function(errorTitle, response) {
 		if((response.status == 401 || response.status == 403)) {
 			this.showLoggedOutDialog();
@@ -332,7 +335,7 @@ module.exports = Backbone.View.extend({
 			console.log(errorTitle + ": " + this.getErrorMessageFromResponse(response));
 		}
 	},
-	
+
 	getErrorMessageFromResponse: function(response) {
 		var errorMessage = "Unknown error";
 		if(response.responseJSON) {
