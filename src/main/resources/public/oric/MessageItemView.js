@@ -104,7 +104,7 @@ module.exports = Backbone.View.extend({
 		this.$("#item-type-button i").attr('class', 'fa fa-exchange');
 		this.$("#item-status-dropdown").hide();
 		this.$("#item-image").hide();
-		this.$("#message-header-details").html(msg + " 5 minutes ago");
+		this.$("#message-content").html(msg);
 	},
 	
 	onViewDetailsMenuItemClicked: function() {
